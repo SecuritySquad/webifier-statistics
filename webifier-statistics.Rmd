@@ -1,0 +1,40 @@
+---
+title: "Webifier Statistics"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(RMongo)
+```
+
+Row {data-height=100}
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r}
+mg1 <- mongoDbConnect('webifier_v0-CLONE')
+print(dbShowCollections(mg1))
+query <- dbGetQuery(mg1, 'webifierTestResultData', "{}")
+
+```
+
+Row
+-----------------------------------------------------------------------
+
+### Chart B
+
+```{r}
+
+```
+
+### Chart C
+
+```{r}
+
+```
+
