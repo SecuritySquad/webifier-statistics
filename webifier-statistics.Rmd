@@ -7,20 +7,39 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-library(flexdashboard)
-library(RMongo)
+require(flexdashboard)
+require(RMongo)
+require(RJSONIO)
+mg1 <- mongoDbConnect('webifier_v0-CLONE')
+print(dbShowCollections(mg1))
+data <- dbGetQuery(mg1, 'webifierTestResultData', "{}")
 ```
 
 Row {data-height=100}
 -----------------------------------------------------------------------
 
-### Chart A
+### analysierte Webseiten
 
 ```{r}
-mg1 <- mongoDbConnect('webifier_v0-CLONE')
-print(dbShowCollections(mg1))
-query <- dbGetQuery(mg1, 'webifierTestResultData', "{}")
+valueBox(nrow(data), icon="fa-bar-chart")
+```
 
+### saubere Webseiten
+
+```{r}
+valueBox(nrow(data[data$overallResultType=='CLEAN',]), icon="fa-bar-chart",color="green")
+```
+
+### maliziöse Webseiten
+
+```{r}
+valueBox(nrow(data[data$overallResultType=='SUSPICIOUS',]), icon="fa-bar-chart",color="red")
+```
+
+### verdächtige Webseiten
+
+```{r}
+valueBox(nrow(data[data$overallResultType=='MALICIOUS',]), icon="fa-bar-chart",color="#e6e600")
 ```
 
 Row
