@@ -1,12 +1,12 @@
 ---
 title: "Webifier Statistics"
-output: 
+output:
   flexdashboard::flex_dashboard:
     orientation: rows
     logo: webifier-small.png
     favicon: webifier-small.png
     theme: lumen
-    vertical_layout: fill
+    vertical_layout: fill 
     navbar:
       - { title: "Startseite", href: "https://webifier.de/", align: right }
 params:
@@ -14,7 +14,7 @@ params:
 ---
 
 ```{r setup, include=FALSE}
-usePackage <- function(p) 
+usePackage <- function(p)
 {
   if (!is.element(p, installed.packages()[,1]))
     install.packages(p, repos='http://cran.r-project.org', dep = TRUE)
@@ -71,4 +71,3 @@ Row {.tabset .tabset-fade}
 ```{r}
 
 ```
-
