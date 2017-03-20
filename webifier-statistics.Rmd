@@ -4,6 +4,7 @@ output:
   flexdashboard::flex_dashboard:
     orientation: rows
     logo: webifier-small.png
+    favicon: webifier-small.png
     theme: lumen
     vertical_layout: fill
     navbar:
