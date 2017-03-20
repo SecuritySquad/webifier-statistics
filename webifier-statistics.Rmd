@@ -17,8 +17,8 @@ params:
 usePackage <- function(p) 
 {
   if (!is.element(p, installed.packages()[,1]))
-    install.packages(p, dep = TRUE, repos="http://cran.r-project.org")
-  require(p, character.only = TRUE)
+    install.packages(p, repos='http://cran.r-project.org', dep = TRUE)
+  library(p, character.only = TRUE)
 }
 usePackage('flexdashboard')
 usePackage('RMongo')
