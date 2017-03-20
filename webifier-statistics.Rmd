@@ -53,7 +53,7 @@ valueBox(nrow(data[data$overallResultType=='SUSPICIOUS',]), icon="fa-bar-chart",
 valueBox(nrow(data[data$overallResultType=='MALICIOUS',]), icon="fa-bar-chart",color="#e6e600")
 ```
 
-Row
+Row {.tabset .tabset-fade}
 -----------------------------------------------------------------------
 
 ### Chart B
