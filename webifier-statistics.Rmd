@@ -9,6 +9,8 @@ output:
     vertical_layout: fill
     navbar:
       - { title: "Startseite", href: "https://webifier.de/", align: right }
+params:
+  dbname: webifier_v0-SNAPSHOT
 ---
 
 ```{r setup, include=FALSE}
@@ -21,7 +23,7 @@ usePackage <- function(p)
 usePackage('flexdashboard')
 usePackage('RMongo')
 usePackage('RJSONIO')
-mg1 <- mongoDbConnect('webifier_v0-CLONE')
+mg1 <- mongoDbConnect(params$dbname)
 print(dbShowCollections(mg1))
 data <- dbGetQuery(mg1, 'webifierTestResultData', "{}")
 ```
