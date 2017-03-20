@@ -3,13 +3,23 @@ title: "Webifier Statistics"
 output: 
   flexdashboard::flex_dashboard:
     orientation: rows
+    logo: webifier-small.png
+    theme: lumen
     vertical_layout: fill
+    navbar:
+      - { title: "Startseite", href: "https://webifier.de/", align: right }
 ---
 
 ```{r setup, include=FALSE}
-require(flexdashboard)
-require(RMongo)
-require(RJSONIO)
+usePackage <- function(p) 
+{
+  if (!is.element(p, installed.packages()[,1]))
+    install.packages(p, dep = TRUE)
+  require(p, character.only = TRUE)
+}
+usePackage('flexdashboard')
+usePackage('RMongo')
+usePackage('RJSONIO')
 mg1 <- mongoDbConnect('webifier_v0-CLONE')
 print(dbShowCollections(mg1))
 data <- dbGetQuery(mg1, 'webifierTestResultData', "{}")
