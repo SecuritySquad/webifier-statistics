@@ -10,7 +10,7 @@ output:
     navbar:
       - { title: "Startseite", href: "https://webifier.de/", align: right }
 params:
-  dbname: webifier_v0-CLONE
+  dbname: webifier_v0-SNAPSHOT
 
 ---
 
