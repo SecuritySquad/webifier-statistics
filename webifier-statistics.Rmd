@@ -10,7 +10,8 @@ output:
     navbar:
       - { title: "Startseite", href: "https://webifier.de/", align: right }
 params:
-  dbname: webifier_v0-SNAPSHOT
+  dbname: webifier_v0-CLONE
+
 ---
 
 ```{r setup, include=FALSE}
@@ -42,20 +43,33 @@ valueBox(nrow(data), icon="fa-bar-chart")
 ### saubere Webseiten
 
 ```{r}
-valueBox(nrow(data[data$overallResultType=='CLEAN',]), icon="fa-bar-chart",color="green")
-```
-
-### maliziöse Webseiten
-
-```{r}
-valueBox(nrow(data[data$overallResultType=='SUSPICIOUS',]), icon="fa-bar-chart",color="red")
+value <- nrow(data[data$overallResultType=='CLEAN',])
+base <- nrow(data)
+gauge(value, min = 0, max = base, label = paste(round((value/base)*100),"%",sep=""), gaugeSectors(
+  success = c(0, base), warning = c(-10, -5), danger = c(-4, -1)
+))
 ```
 
 ### verdächtige Webseiten
 
 ```{r}
-valueBox(nrow(data[data$overallResultType=='MALICIOUS',]), icon="fa-bar-chart",color="#e6e600")
+value <- nrow(data[data$overallResultType=='SUSPICIOUS',])
+base <- nrow(data)
+gauge(value, min = 0, max = base, label = paste(round((value/base)*100),"%",sep=""), gaugeSectors(
+  success = c(-10, -5), warning = c(0, base), danger = c(-4, -1)
+))
 ```
+
+### maliziöse Webseiten
+
+```{r}
+value <- nrow(data[data$overallResultType=='MALICIOUS',])
+base <- nrow(data)
+gauge(value, min = 0, max = base, label = paste(round((value/base)*100),"%",sep=""), gaugeSectors(
+  success = c(-4, -1), warning = c(-10, -5), danger = c(0, base)
+))
+```
+
 
 Row {.tabset .tabset-fade}
 -----------------------------------------------------------------------
