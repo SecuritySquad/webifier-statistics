@@ -1,11 +1,10 @@
 ---
-title: "Webifier Statistics"
+title: "webifier Statistics"
 output:
   flexdashboard::flex_dashboard:
     orientation: rows
     logo: webifier-small.png
     favicon: webifier-small.png
-    
     css: style.css
     vertical_layout: fill 
     navbar:
@@ -75,9 +74,11 @@ gauge(value, min = 0, max = base, label = paste(round((value/base)*100),"%",sep=
 Row {.tabset .tabset-fade}
 -----------------------------------------------------------------------
 
-### Chart B
+### Testergebnisverteilung
 
 ```{r}
+testresults <- c()
+
 
 ```
 
