@@ -5,7 +5,8 @@ output:
     orientation: rows
     logo: webifier-small.png
     favicon: webifier-small.png
-    theme: lumen
+    
+    css: style.css
     vertical_layout: fill 
     navbar:
       - { title: "Startseite", href: "https://webifier.de/", align: right }
