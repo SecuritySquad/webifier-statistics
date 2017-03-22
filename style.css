@@ -30,15 +30,20 @@ body {
   padding: 0;
 }
 
-.navbar-brand, .navbar-toggler {
+.navbar-header, .navbar-collapse {
+    margin: 0 !important;
+}
+
+.navbar-brand {
   color: rgba(0,0,0,.9) !important;
 }
 
 .navbar-brand {
+  margin: 0 !important;
   float: left;
   padding-top: .25rem;
   padding-bottom: .25rem;
-  margin-right: 1rem;
+  padding-left: 0;
   font-size: 1.25rem;
   line-height: inherit;
   white-space: nowrap;
@@ -59,6 +64,19 @@ img.navbar-logo {
   margin: 0;
 }
 
+.navbar-toggle {
+    color: rgba(0,0,0,.9) !important;
+    border-color: rgba(0,0,0,.1) !important;
+}
+
+.navbar-toggle .icon-bar {
+    background-color: rgba(0,0,0,.9) !important;
+}
+
+.navbar-inverse .navbar-toggle:hover, .navbar-inverse .navbar-toggle:focus {
+    background-color: transparent;
+}
+
 .navbar .navbar-nav li a {
   color: rgba(0,0,0,.5);
   display: block;
@@ -69,6 +87,10 @@ img.navbar-logo {
 .navbar .navbar-nav li a:focus, .navbar .navbar-nav li a:hover {
     color: rgba(0,0,0,.7);
     background-color: transparent;
+}
+
+.navbar-collapse {
+    border: none;
 }
 
 .level2 {
