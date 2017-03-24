@@ -28,7 +28,7 @@ library('RMongo')
 library('RJSONIO')
 mg1 <- mongoDbConnect(params$dbname)
 print(dbShowCollections(mg1))
-resultType <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{}", "{overallResultType:1}")
+resultType <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{}", "{overallResultType:1}",skip=0,limit=Inf)
 ```
 
 Row {data-height=100}
