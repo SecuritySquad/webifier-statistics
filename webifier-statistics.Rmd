@@ -28,7 +28,7 @@ library('RMongo')
 library('RJSONIO')
 mg1 <- mongoDbConnect(params$dbname)
 print(dbShowCollections(mg1))
-data <- dbGetQuery(mg1, 'webifierTestResultData', "{}")
+resultType <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{}", "{overallResultType:1}")
 ```
 
 Row {data-height=100}
@@ -37,14 +37,14 @@ Row {data-height=100}
 ### analysierte Webseiten
 
 ```{r}
-valueBox(nrow(data), icon="fa-bar-chart")
+valueBox(nrow(resultType), icon="fa-bar-chart")
 ```
 
 ### saubere Webseiten
 
 ```{r}
-value <- nrow(data[data$overallResultType=='CLEAN',])
-base <- nrow(data)
+value <- nrow(resultType[resultType$overallResultType=='CLEAN',])
+base <- nrow(resultType)
 gauge(value, min = 0, max = base, label = paste(round((value/base)*100),"%",sep=""), gaugeSectors(
   success = c(0, base), warning = c(-10, -5), danger = c(-4, -1)
 ))
@@ -53,8 +53,8 @@ gauge(value, min = 0, max = base, label = paste(round((value/base)*100),"%",sep=
 ### verdächtige Webseiten
 
 ```{r}
-value <- nrow(data[data$overallResultType=='SUSPICIOUS',])
-base <- nrow(data)
+value <- nrow(resultType[resultType$overallResultType=='SUSPICIOUS',])
+base <- nrow(resultType)
 gauge(value, min = 0, max = base, label = paste(round((value/base)*100),"%",sep=""), gaugeSectors(
   success = c(-10, -5), warning = c(0, base), danger = c(-4, -1)
 ))
@@ -63,8 +63,8 @@ gauge(value, min = 0, max = base, label = paste(round((value/base)*100),"%",sep=
 ### maliziöse Webseiten
 
 ```{r}
-value <- nrow(data[data$overallResultType=='MALICIOUS',])
-base <- nrow(data)
+value <- nrow(resultType[resultType$overallResultType=='MALICIOUS',])
+base <- nrow(resultType)
 gauge(value, min = 0, max = base, label = paste(round((value/base)*100),"%",sep=""), gaugeSectors(
   success = c(-4, -1), warning = c(-10, -5), danger = c(0, base)
 ))
@@ -77,7 +77,8 @@ Row {.tabset .tabset-fade}
 ### Testergebnisverteilung
 
 ```{r}
-testresults <- c()
+#testresults <- data.frame(name=character(),result=character())
+#by(data,seq_len(nrow(data)),function(row) testresults <- #rbind(testresults,data.frame(name=row$name,result=row$result)))
 
 
 ```
