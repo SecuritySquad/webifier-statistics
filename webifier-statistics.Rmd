@@ -77,6 +77,7 @@ Row {.tabset .tabset-fade}
 ### Testergebnisverteilung
 
 ```{r}
+testResults <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{}", '{"testResults$testResult":1}')
 #testresults <- data.frame(name=character(),result=character())
 #by(data,seq_len(nrow(data)),function(row) testresults <- #rbind(testresults,data.frame(name=row$name,result=row$result)))
 
