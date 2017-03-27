@@ -10,7 +10,7 @@ output:
     navbar:
       - { title: "Startseite", href: "https://webifier.de/", align: right }
 params:
-  dbname: webifier_v0-SNAPSHOT
+  dbname: webifier_v1-SNAPSHOT
 
 ---
 
@@ -18,14 +18,18 @@ params:
 usePackage <- function(p)
 {
   if (!is.element(p, installed.packages()[,1]))
-    install.packages(paste("'",p,"'",sep=""), repos='http://cran.r-project.org', dep = TRUE)
+    install.packages(p, repos='http://cran.r-project.org', dep = TRUE)
 }
 usePackage('flexdashboard')
 usePackage('RMongo')
 usePackage('RJSONIO')
+usePackage('plotly')
+usePackage('ggplot2')
 library('flexdashboard')
 library('RMongo')
 library('RJSONIO')
+library('plotly')
+library('ggplot2')
 mg1 <- mongoDbConnect(params$dbname)
 print(dbShowCollections(mg1))
 resultType <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{}", "{overallResultType:1}",skip=0,limit=Inf)
@@ -60,7 +64,7 @@ gauge(value, min = 0, max = base, label = paste(round((value/base)*100),"%",sep=
 ))
 ```
 
-### maliziöse Webseiten
+### bedrohliche Webseiten
 
 ```{r}
 value <- nrow(resultType[resultType$overallResultType=='MALICIOUS',])
@@ -77,10 +81,11 @@ Row {.tabset .tabset-fade}
 ### Testergebnisverteilung
 
 ```{r}
-testResults <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{}", '{"testResults$testResult":1}')
-#testresults <- data.frame(name=character(),result=character())
-#by(data,seq_len(nrow(data)),function(row) testresults <- #rbind(testresults,data.frame(name=row$name,result=row$result)))
-
+testResults <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{}", '{_id:0,name:1,result:1}',skip=0,limit=Inf)
+testResults <- testResults[,-1]
+p <- ggplot(data = testResults, aes(x = name, fill = result)) +
+            geom_bar(position = "dodge")
+ggplotly(p)
 
 ```
 
