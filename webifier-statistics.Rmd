@@ -25,7 +25,9 @@ usePackage('RMongo')
 usePackage('RJSONIO')
 usePackage('plotly')
 usePackage('ggplot2')
+usePackage('urltools')
 library('flexdashboard')
+library('urltools')
 library('RMongo')
 library('RJSONIO')
 library('plotly')
@@ -89,7 +91,42 @@ ggplotly(p)
 
 ```
 
-### Chart C
+### Verteilung auf Top-Level-Domains
+
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{}", "{host:1,overallResultType:1}",skip=0,limit=Inf)
+result[,1] <- tld_extract(result[,1],NULL)[,2]
+names(result)[1] <- "TLD"
+p <- ggplot(data = result, aes(x = TLD, fill = overallResultType)) +
+            geom_bar(position = "dodge")
+ggplotly(p)
+```
+
+### Virusscan
+
+```{r}
+
+```
+
+### Portscan
+
+```{r}
+
+```
+
+### IPScan
+
+```{r}
+
+```
+
+### Phishingdetector
+
+```{r}
+
+```
+
+### weitere Testanalysen
 
 ```{r}
 
