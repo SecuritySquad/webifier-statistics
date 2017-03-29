@@ -70,7 +70,7 @@ img.navbar-logo {
 }
 
 .navbar-toggle .icon-bar {
-    background-color: rgba(0,0,0,.9) !important;
+    background-color: rgba(0,0,0,.9) !important¢;
 }
 
 .navbar-inverse .navbar-toggle:hover, .navbar-inverse .navbar-toggle:focus {
@@ -86,6 +86,12 @@ img.navbar-logo {
 
 .navbar .navbar-nav li a:focus, .navbar .navbar-nav li a:hover {
     color: rgba(0,0,0,.7);
+    background-color: transparent;
+    outline: 0;
+}
+
+.navbar .navbar-nav li.active a, .navbar .navbar-nav li.active a:hover, .navbar .navbar-nav li.active a:focus {
+    color: rgba(0,0,0,.9);
     background-color: transparent;
 }
 
