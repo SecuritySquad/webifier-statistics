@@ -104,8 +104,28 @@ p <- ggplot(data = result, aes(x = TLD, fill = overallResultType)) +
             geom_bar(position = "dodge") +
   scale_fill_manual(values=c("red","orange","grey"))
 ggplotly(p)
+
+
+
 ```
 
+### Verteilung der getesteten Top-Level-Domains
+
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{}", "{host:1,overallResultType:1}",skip=0,limit=Inf)
+result[,1] <- tld_extract(result[,1],NULL)[,2]
+names(result)[1] <- "TLD"
+tlds <- result[,-3]
+names(tlds)[2] <- "count"
+tlds <- aggregate(count ~ TLD,tlds,length)
+tlds <- tlds[tlds[,2]>3,]
+p <- plot_ly(tlds, labels = ~TLD, values = ~count, type = 'pie') %>%
+  layout(title = 'Verteilung der getesteten Top-Level-Domains',
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+ggplotly(p)
+```
 ### Virusscan
 
 ```{r}
