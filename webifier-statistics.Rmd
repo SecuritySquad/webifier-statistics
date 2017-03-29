@@ -8,7 +8,7 @@ output:
     css: style.css
     vertical_layout: fill 
     navbar:
-      - { title: "Startseite", href: "https://webifier.de/", align: right }
+      - { title: "webifier", href: "https://webifier.de/", align: right }
 params:
   dbname: webifier_v1-SNAPSHOT
 
