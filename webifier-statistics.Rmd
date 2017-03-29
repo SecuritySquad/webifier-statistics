@@ -93,12 +93,13 @@ ggplotly(p)
 
 ```
 
-### Verteilung auf Top-Level-Domains
+### Erkennungen auf Top-Level-Domains
 
 ```{r}
 result <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{}", "{host:1,overallResultType:1}",skip=0,limit=Inf)
 result[,1] <- tld_extract(result[,1],NULL)[,2]
 names(result)[1] <- "TLD"
+result <- result[result[,2]!="CLEAN",]
 p <- ggplot(data = result, aes(x = TLD, fill = overallResultType)) +
             geom_bar(position = "dodge") +
   scale_fill_manual(values=c("darkgreen","red","orange","grey"))
