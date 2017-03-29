@@ -37,6 +37,9 @@ print(dbShowCollections(mg1))
 resultType <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{}", "{overallResultType:1}",skip=0,limit=Inf)
 ```
 
+Dashboard
+=====================================
+
 Row {data-height=100}
 -----------------------------------------------------------------------
 
@@ -76,6 +79,11 @@ gauge(value, min = 0, max = base, label = paste(round((value/base)*100),"%",sep=
 ))
 ```
 
+Row
+-----------------------------------------------------------------------
+
+Gesamttestauswertungen
+=====================================
 
 Row {.tabset .tabset-fade}
 -----------------------------------------------------------------------
@@ -126,6 +134,14 @@ p <- plot_ly(tlds, labels = ~TLD, values = ~count, type = 'pie') %>%
 
 ggplotly(p)
 ```
+
+Einzeltestauswertungen
+=====================================
+
+
+Row {.tabset .tabset-fade}
+-----------------------------------------------------------------------
+
 ### Virusscan
 
 ```{r}
