@@ -26,12 +26,14 @@ usePackage('RJSONIO')
 usePackage('plotly')
 usePackage('ggplot2')
 usePackage('urltools')
+usePackage('DT')
 library('flexdashboard')
 library('urltools')
 library('RMongo')
 library('RJSONIO')
 library('plotly')
 library('ggplot2')
+library('DT')
 mg1 <- mongoDbConnect(params$dbname)
 print(dbShowCollections(mg1))
 resultType <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{}", "{overallResultType:1}",skip=0,limit=Inf)
@@ -92,11 +94,16 @@ Row {.tabset .tabset-fade}
 
 ```{r}
 testResults <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{}", '{_id:0,name:1,result:1}',skip=0,limit=Inf)
-
 testResults <- testResults[,-1]
-p <- ggplot(data = testResults, aes(x = name, fill = result)) +
+testResults[resultType$overallResultType=='MALICIOUS',2] <- "bedrohlich"
+testResults[resultType$overallResultType=='SUSPICIOUS',2] <- "verdächtig"
+testResults[resultType$overallResultType=='CLEAN',2] <- "sauber"
+testResults[resultType$overallResultType=='UNKNOWN',2] <- "unbekannt"
+names(testResults) <- c('Testname','Ergebnis')
+p <- ggplot(data = testResults, aes(x = Testname, fill = Ergebnis)) +
             geom_bar(position = "dodge") +
-  scale_fill_manual(values=c("darkgreen","red","orange","grey"))
+            ylab("Anzahl") + 
+  scale_fill_manual(values=c("red","darkgreen","orange","grey"))
 ggplotly(p)
 
 ```
@@ -106,10 +113,14 @@ ggplotly(p)
 ```{r}
 result <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{}", "{host:1,overallResultType:1}",skip=0,limit=Inf)
 result[,1] <- tld_extract(result[,1],NULL)[,2]
-names(result)[1] <- "TLD"
 result <- result[result[,2]!="CLEAN",]
-p <- ggplot(data = result, aes(x = TLD, fill = overallResultType)) +
+result[result$overallResultType=='MALICIOUS',2] <- "bedrohlich"
+result[result$overallResultType=='SUSPICIOUS',2] <- "verdächtig"
+result[result$overallResultType=='UNKNOWN',2] <- "unbekannt"
+names(result) <- c('TLD','Ergebnis','id')
+p <- ggplot(data = result, aes(x = TLD, fill = Ergebnis),col="Anzahl") +
             geom_bar(position = "dodge") +
+            ylab("Anzahl") + 
   scale_fill_manual(values=c("red","orange","grey"))
 ggplotly(p)
 
@@ -127,7 +138,8 @@ tlds <- result[,-3]
 names(tlds)[2] <- "count"
 tlds <- aggregate(count ~ TLD,tlds,length)
 tlds <- tlds[tlds[,2]>3,]
-p <- plot_ly(tlds, labels = ~TLD, values = ~count, type = 'pie') %>%
+names(tlds) <- c('TLD','Anzahl')
+p <- plot_ly(tlds, labels = ~TLD, values = ~Anzahl, type = 'pie') %>%
   layout(title = 'Verteilung der getesteten Top-Level-Domains',
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
@@ -171,3 +183,22 @@ Row {.tabset .tabset-fade}
 ```{r}
 
 ```
+
+Ergebnisse durchsuchen
+=====================================
+
+Row
+-----------------------------------------------------------------------
+### alle Testergebnisse
+
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{}", "{datetime:1,host:1,overallResultType:1}",skip=0,limit=Inf)
+result <- result[,-4]
+names(result) <- c('Datum','Domain','Ergebnis')
+locale <- Sys.setlocale("LC_TIME", "en_US.UTF-8")
+format <- "%a %b %d %H:%M:%S CEST %Y"
+result[,1] <- format(as.Date(as.POSIXct(result[,1],format, tz="CET")),"%d-%m-%Y")
+datatable(result, options = list(pageLength = 100))
+```
+
+
