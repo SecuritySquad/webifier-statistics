@@ -98,12 +98,12 @@ testResults <- testResults[,-1]
 testResults[testResults$result=='MALICIOUS',2] <- "bedrohlich"
 testResults[testResults$result=='SUSPICIOUS',2] <- "verdächtig"
 testResults[testResults$result=='CLEAN',2] <- "sauber"
-testResults[testResults$result=='UNKNOWN',2] <- "unbekannt"
+testResults[testResults$result=='UNDEFINED',2] <- "unbekannt"
 names(testResults) <- c('Testname','Ergebnis')
 p <- ggplot(data = testResults, aes(x = Testname, fill = Ergebnis)) +
             geom_bar(position = "dodge") +
             ylab("Anzahl") + 
-  scale_fill_manual(values=c("red","darkgreen","orange","grey"))
+  scale_fill_manual(values=c("red","darkgreen","grey","orange"))
 ggplotly(p)
 
 ```
@@ -116,7 +116,7 @@ result[,1] <- tld_extract(result[,1],NULL)[,2]
 result <- result[result[,2]!="CLEAN",]
 result[result$overallResultType=='MALICIOUS',2] <- "bedrohlich"
 result[result$overallResultType=='SUSPICIOUS',2] <- "verdächtig"
-result[result$overallResultType=='UNKNOWN',2] <- "unbekannt"
+result[result$overallResultType=='UNDEFINED',2] <- "unbekannt"
 names(result) <- c('TLD','Ergebnis','id')
 p <- ggplot(data = result, aes(x = TLD, fill = Ergebnis),col="Anzahl") +
             geom_bar(position = "dodge") +
