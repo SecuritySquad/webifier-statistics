@@ -102,7 +102,7 @@ names(result)[1] <- "TLD"
 result <- result[result[,2]!="CLEAN",]
 p <- ggplot(data = result, aes(x = TLD, fill = overallResultType)) +
             geom_bar(position = "dodge") +
-  scale_fill_manual(values=c("darkgreen","red","orange","grey"))
+  scale_fill_manual(values=c("red","orange","grey"))
 ggplotly(p)
 ```
 
