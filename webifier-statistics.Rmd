@@ -95,10 +95,10 @@ Row {.tabset .tabset-fade}
 ```{r}
 testResults <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{}", '{_id:0,name:1,result:1}',skip=0,limit=Inf)
 testResults <- testResults[,-1]
-testResults[resultType$overallResultType=='MALICIOUS',2] <- "bedrohlich"
-testResults[resultType$overallResultType=='SUSPICIOUS',2] <- "verdächtig"
-testResults[resultType$overallResultType=='CLEAN',2] <- "sauber"
-testResults[resultType$overallResultType=='UNKNOWN',2] <- "unbekannt"
+testResults[testResults$result=='MALICIOUS',2] <- "bedrohlich"
+testResults[testResults$result=='SUSPICIOUS',2] <- "verdächtig"
+testResults[testResults$result=='CLEAN',2] <- "sauber"
+testResults[testResults$result=='UNKNOWN',2] <- "unbekannt"
 names(testResults) <- c('Testname','Ergebnis')
 p <- ggplot(data = testResults, aes(x = Testname, fill = Ergebnis)) +
             geom_bar(position = "dodge") +
