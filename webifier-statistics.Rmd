@@ -108,7 +108,7 @@ ggplotly(p)
 
 ```
 
-### Erkennungen auf Top-Level-Domains
+### Erkennungen anhand Top-Level-Domains
 
 ```{r}
 result <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{}", "{host:1,overallResultType:1}",skip=0,limit=Inf)
@@ -124,7 +124,26 @@ p <- ggplot(data = result, aes(x = TLD, fill = Ergebnis),col="Anzahl") +
   scale_fill_manual(values=c("red","orange","grey"))
 ggplotly(p)
 
+```
 
+### prozentuale Erkennungen anhand Top-Level-Domains
+
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{}", "{host:1,overallResultType:1}",skip=0,limit=Inf)
+result[,1] <- tld_extract(result[,1],NULL)[,2]
+result <- result[result[,2]!="CLEAN",]
+names(result)[3] <- "Anzahl"
+agg.result <- aggregate(Anzahl ~ host+overallResultType,result,length)
+result[result$overallResultType=='MALICIOUS',2] <- "bedrohlich"
+result[result$overallResultType=='SUSPICIOUS',2] <- "verdächtig"
+result[result$overallResultType=='UNDEFINED',2] <- "unbekannt"
+names(result) <- c('TLD','Ergebnis','Anzahl')
+p <- plot_ly(alpha = 0.6) %>%
+  add_histogram(x = result$Ergebnis,data= result[result$Ergebnis=='bedrohlich',]) %>%
+  add_histogram(x = result$Ergebnis,data= result[result$Ergebnis=='verdächtig',]) %>%
+  add_histogram(x = result$Ergebnis,data= result[result$Ergebnis=='unbekannt',]) %>%
+  layout(barmode = "stack")
+ggplotly(p)
 
 ```
 
@@ -137,8 +156,9 @@ names(result)[1] <- "TLD"
 tlds <- result[,-3]
 names(tlds)[2] <- "count"
 tlds <- aggregate(count ~ TLD,tlds,length)
-tlds <- tlds[tlds[,2]>3,]
 names(tlds) <- c('TLD','Anzahl')
+tld_sum <- sum(tlds$Anzahl)
+tlds[(tlds$Anzahl/tld_sum)<0.01,1] <- 'Andere'
 p <- plot_ly(tlds, labels = ~TLD, values = ~Anzahl, type = 'pie') %>%
   layout(title = 'Verteilung der getesteten Top-Level-Domains',
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
@@ -146,6 +166,8 @@ p <- plot_ly(tlds, labels = ~TLD, values = ~Anzahl, type = 'pie') %>%
 
 ggplotly(p)
 ```
+
+
 
 Einzelauswertungen
 =====================================
