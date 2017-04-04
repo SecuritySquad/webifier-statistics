@@ -36,7 +36,6 @@ library('ggplot2')
 library('DT')
 mg1 <- mongoDbConnect(params$dbname)
 print(dbShowCollections(mg1))
-resultType <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{}", "{overallResultType:1}",skip=0,limit=Inf)
 ```
 
 Dashboard
@@ -48,6 +47,7 @@ Row {data-height=100}
 ### analysierte Webseiten
 
 ```{r}
+resultType <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{}", "{overallResultType:1}",skip=0,limit=Inf)
 valueBox(nrow(resultType), icon="fa-bar-chart")
 ```
 
@@ -93,14 +93,14 @@ Row {.tabset .tabset-fade}
 ### Testergebnisverteilung
 
 ```{r}
-testResults <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{}", '{_id:0,name:1,result:1}',skip=0,limit=Inf)
-testResults <- testResults[,-1]
-testResults[testResults$result=='MALICIOUS',2] <- "bedrohlich"
-testResults[testResults$result=='SUSPICIOUS',2] <- "verdächtig"
-testResults[testResults$result=='CLEAN',2] <- "sauber"
-testResults[testResults$result=='UNDEFINED',2] <- "unbekannt"
-names(testResults) <- c('Testname','Ergebnis')
-p <- ggplot(data = testResults, aes(x = Testname, fill = Ergebnis)) +
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{}", '{_id:0,name:1,result:1}',skip=0,limit=Inf)
+result <- result[,-1]
+result[result$result=='MALICIOUS',2] <- "bedrohlich"
+result[result$result=='SUSPICIOUS',2] <- "verdächtig"
+result[result$result=='CLEAN',2] <- "sauber"
+result[result$result=='UNDEFINED',2] <- "unbekannt"
+names(result) <- c('Testname','Ergebnis')
+p <- ggplot(data = result, aes(x = Testname, fill = Ergebnis)) +
             geom_bar(position = "dodge") +
             ylab("Anzahl") + 
   scale_fill_manual(values=c("red","darkgreen","grey","orange"))
@@ -181,7 +181,7 @@ Row
 
 ### Getestete Seiten
 ```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'VirusScan'}", '{}',skip=0,limit=Inf)
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'VirusScan'}", '{result:1}',skip=0,limit=Inf)
 valueBox(nrow(result), icon="fa-bar-chart")
 ```
 
@@ -190,7 +190,6 @@ Row
 
 ### Ergebnisverteilung
 ```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'VirusScan'}", '{result:1}',skip=0,limit=Inf)
 names(result)[2] <- "Anzahl"
 result <- aggregate(Anzahl ~ result,result,length)
 result[result$result=='MALICIOUS',1] <- "bedrohlich"
@@ -212,7 +211,7 @@ Row
 
 ### Getestete Seiten
 ```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'PortScan'}", '{}',skip=0,limit=Inf)
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'PortScan'}", '{result:1}',skip=0,limit=Inf)
 valueBox(nrow(result), icon="fa-bar-chart")
 ```
 
@@ -221,7 +220,6 @@ Row
 
 ### Ergebnisverteilung
 ```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'PortScan'}", '{result:1}',skip=0,limit=Inf)
 names(result)[2] <- "Anzahl"
 result <- aggregate(Anzahl ~ result,result,length)
 result[result$result=='MALICIOUS',1] <- "bedrohlich"
@@ -243,7 +241,7 @@ Row
 
 ### Getestete Seiten
 ```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'IpScan'}", '{}',skip=0,limit=Inf)
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'IpScan'}", '{result:1}',skip=0,limit=Inf)
 valueBox(nrow(result), icon="fa-bar-chart")
 ```
 
@@ -252,7 +250,6 @@ Row
 
 ### Ergebnisverteilung
 ```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'IpScan'}", '{result:1}',skip=0,limit=Inf)
 names(result)[2] <- "Anzahl"
 result <- aggregate(Anzahl ~ result,result,length)
 result[result$result=='MALICIOUS',1] <- "bedrohlich"
@@ -275,7 +272,7 @@ Row
 
 ### Getestete Seiten
 ```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'PhishingDetector'}", '{}',skip=0,limit=Inf)
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'PhishingDetector'}", '{result:1}',skip=0,limit=Inf)
 valueBox(nrow(result), icon="fa-bar-chart")
 ```
 
@@ -284,7 +281,6 @@ Row
 
 ### Ergebnisverteilung
 ```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'PhishingDetector'}", '{result:1}',skip=0,limit=Inf)
 names(result)[2] <- "Anzahl"
 result <- aggregate(Anzahl ~ result,result,length)
 result[result$result=='MALICIOUS',1] <- "bedrohlich"
@@ -307,7 +303,7 @@ Row
 
 ### Getestete Seiten
 ```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'HeaderInspection'}", '{}',skip=0,limit=Inf)
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'HeaderInspection'}", '{result:1}',skip=0,limit=Inf)
 valueBox(nrow(result), icon="fa-bar-chart")
 ```
 
@@ -316,7 +312,6 @@ Row
 
 ### Ergebnisverteilung
 ```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'HeaderInspection'}", '{result:1}',skip=0,limit=Inf)
 names(result)[2] <- "Anzahl"
 result <- aggregate(Anzahl ~ result,result,length)
 result[result$result=='MALICIOUS',1] <- "bedrohlich"
@@ -338,7 +333,7 @@ Row
 
 ### Getestete Seiten
 ```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'LinkChecker'}", '{}',skip=0,limit=Inf)
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'LinkChecker'}", '{result:1}',skip=0,limit=Inf)
 valueBox(nrow(result), icon="fa-bar-chart")
 ```
 
@@ -347,7 +342,6 @@ Row
 
 ### Ergebnisverteilung
 ```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'LinkChecker'}", '{result:1}',skip=0,limit=Inf)
 names(result)[2] <- "Anzahl"
 result <- aggregate(Anzahl ~ result,result,length)
 result[result$result=='MALICIOUS',1] <- "bedrohlich"
@@ -369,7 +363,7 @@ Row
 
 ### Getestete Seiten
 ```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'GoogleSafeBrowsing'}", '{}',skip=0,limit=Inf)
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'GoogleSafeBrowsing'}", '{result:1}',skip=0,limit=Inf)
 valueBox(nrow(result), icon="fa-bar-chart")
 ```
 
@@ -378,7 +372,6 @@ Row
 
 ### Ergebnisverteilung
 ```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'GoogleSafeBrowsing'}", '{result:1}',skip=0,limit=Inf)
 names(result)[2] <- "Anzahl"
 result <- aggregate(Anzahl ~ result,result,length)
 result[result$result=='MALICIOUS',1] <- "bedrohlich"
@@ -400,7 +393,7 @@ Row
 
 ### Getestete Seiten
 ```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'CertificateChecker'}", '{}',skip=0,limit=Inf)
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'CertificateChecker'}", '{result:1}',skip=0,limit=Inf)
 valueBox(nrow(result), icon="fa-bar-chart")
 ```
 
@@ -409,7 +402,6 @@ Row
 
 ### Ergebnisverteilung
 ```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'CertificateChecker'}", '{result:1}',skip=0,limit=Inf)
 names(result)[2] <- "Anzahl"
 result <- aggregate(Anzahl ~ result,result,length)
 result[result$result=='MALICIOUS',1] <- "bedrohlich"
