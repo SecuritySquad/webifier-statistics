@@ -121,7 +121,7 @@ names(result) <- c('TLD','Ergebnis','id')
 p <- ggplot(data = result, aes(x = TLD, fill = Ergebnis),col="Anzahl") +
             geom_bar(position = "dodge") +
             ylab("Anzahl") + 
-  scale_fill_manual(values=c("red","orange","grey"))
+  scale_fill_manual(values=c("red","grey","orange"))
 ggplotly(p)
 
 ```
@@ -173,42 +173,254 @@ ggplotly(p)
 ```
 
 
-
-Einzelauswertungen
+Virusscan {data-navmenu="Einzelauswertungen"}
 =====================================
 
-
-Row {.tabset .tabset-fade}
+Row
 -----------------------------------------------------------------------
 
-### Virusscan
-
+### Getestete Seiten
 ```{r}
-
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'VirusScan'}", '{}',skip=0,limit=Inf)
+valueBox(nrow(result), icon="fa-bar-chart")
 ```
 
-### Portscan
+Row
+-----------------------------------------------------------------------
 
+### Ergebnisverteilung
 ```{r}
-
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'VirusScan'}", '{result:1}',skip=0,limit=Inf)
+names(result)[2] <- "Anzahl"
+result <- aggregate(Anzahl ~ result,result,length)
+result[result$result=='MALICIOUS',1] <- "bedrohlich"
+result[result$result=='SUSPICIOUS',1] <- "verdächtig"
+result[result$result=='UNDEFINED',1] <- "unbekannt"
+result[result$result=='CLEAN',1] <- "sauber"
+p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("red","darkgreen","grey","orange")) %>%
+  layout(title = 'Ergebnisverteilung',
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+ggplotly(p)
 ```
 
-### IPScan
+Portscan {data-navmenu="Einzelauswertungen"}
+=====================================
 
+Row
+-----------------------------------------------------------------------
+
+### Getestete Seiten
 ```{r}
-
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'PortScan'}", '{}',skip=0,limit=Inf)
+valueBox(nrow(result), icon="fa-bar-chart")
 ```
 
-### Phishingdetector
+Row
+-----------------------------------------------------------------------
 
+### Ergebnisverteilung
 ```{r}
-
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'PortScan'}", '{result:1}',skip=0,limit=Inf)
+names(result)[2] <- "Anzahl"
+result <- aggregate(Anzahl ~ result,result,length)
+result[result$result=='MALICIOUS',1] <- "bedrohlich"
+result[result$result=='SUSPICIOUS',1] <- "verdächtig"
+result[result$result=='UNDEFINED',1] <- "unbekannt"
+result[result$result=='CLEAN',1] <- "sauber"
+p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("red","darkgreen","grey","orange")) %>%
+  layout(title = 'Ergebnisverteilung',
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+ggplotly(p)
 ```
 
-### weitere Testanalysen
+IPScan {data-navmenu="Einzelauswertungen"}
+=====================================
 
+Row
+-----------------------------------------------------------------------
+
+### Getestete Seiten
 ```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'IpScan'}", '{}',skip=0,limit=Inf)
+valueBox(nrow(result), icon="fa-bar-chart")
+```
 
+Row
+-----------------------------------------------------------------------
+
+### Ergebnisverteilung
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'IpScan'}", '{result:1}',skip=0,limit=Inf)
+names(result)[2] <- "Anzahl"
+result <- aggregate(Anzahl ~ result,result,length)
+result[result$result=='MALICIOUS',1] <- "bedrohlich"
+result[result$result=='SUSPICIOUS',1] <- "verdächtig"
+result[result$result=='UNDEFINED',1] <- "unbekannt"
+result[result$result=='CLEAN',1] <- "sauber"
+p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("red","darkgreen","grey","orange")) %>%
+  layout(title = 'Ergebnisverteilung',
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+ggplotly(p)
+```
+
+
+PhishingDetector {data-navmenu="Einzelauswertungen"}
+=====================================
+
+Row
+-----------------------------------------------------------------------
+
+### Getestete Seiten
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'PhishingDetector'}", '{}',skip=0,limit=Inf)
+valueBox(nrow(result), icon="fa-bar-chart")
+```
+
+Row
+-----------------------------------------------------------------------
+
+### Ergebnisverteilung
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'PhishingDetector'}", '{result:1}',skip=0,limit=Inf)
+names(result)[2] <- "Anzahl"
+result <- aggregate(Anzahl ~ result,result,length)
+result[result$result=='MALICIOUS',1] <- "bedrohlich"
+result[result$result=='SUSPICIOUS',1] <- "verdächtig"
+result[result$result=='UNDEFINED',1] <- "unbekannt"
+result[result$result=='CLEAN',1] <- "sauber"
+p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("red","darkgreen","grey","orange")) %>%
+  layout(title = 'Ergebnisverteilung',
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+ggplotly(p)
+```
+
+
+HeaderInspection {data-navmenu="Einzelauswertungen"}
+=====================================
+
+Row
+-----------------------------------------------------------------------
+
+### Getestete Seiten
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'HeaderInspection'}", '{}',skip=0,limit=Inf)
+valueBox(nrow(result), icon="fa-bar-chart")
+```
+
+Row
+-----------------------------------------------------------------------
+
+### Ergebnisverteilung
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'HeaderInspection'}", '{result:1}',skip=0,limit=Inf)
+names(result)[2] <- "Anzahl"
+result <- aggregate(Anzahl ~ result,result,length)
+result[result$result=='MALICIOUS',1] <- "bedrohlich"
+result[result$result=='SUSPICIOUS',1] <- "verdächtig"
+result[result$result=='UNDEFINED',1] <- "unbekannt"
+result[result$result=='CLEAN',1] <- "sauber"
+p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("red","darkgreen","grey","orange")) %>%
+  layout(title = 'Ergebnisverteilung',
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+ggplotly(p)
+```
+
+LinkChecker {data-navmenu="Einzelauswertungen"}
+=====================================
+
+Row
+-----------------------------------------------------------------------
+
+### Getestete Seiten
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'LinkChecker'}", '{}',skip=0,limit=Inf)
+valueBox(nrow(result), icon="fa-bar-chart")
+```
+
+Row
+-----------------------------------------------------------------------
+
+### Ergebnisverteilung
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'LinkChecker'}", '{result:1}',skip=0,limit=Inf)
+names(result)[2] <- "Anzahl"
+result <- aggregate(Anzahl ~ result,result,length)
+result[result$result=='MALICIOUS',1] <- "bedrohlich"
+result[result$result=='SUSPICIOUS',1] <- "verdächtig"
+result[result$result=='UNDEFINED',1] <- "unbekannt"
+result[result$result=='CLEAN',1] <- "sauber"
+p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("red","darkgreen","grey","orange")) %>%
+  layout(title = 'Ergebnisverteilung',
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+ggplotly(p)
+```
+
+GoogleSafeBrowsing {data-navmenu="Einzelauswertungen"}
+=====================================
+
+Row
+-----------------------------------------------------------------------
+
+### Getestete Seiten
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'GoogleSafeBrowsing'}", '{}',skip=0,limit=Inf)
+valueBox(nrow(result), icon="fa-bar-chart")
+```
+
+Row
+-----------------------------------------------------------------------
+
+### Ergebnisverteilung
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'GoogleSafeBrowsing'}", '{result:1}',skip=0,limit=Inf)
+names(result)[2] <- "Anzahl"
+result <- aggregate(Anzahl ~ result,result,length)
+result[result$result=='MALICIOUS',1] <- "bedrohlich"
+result[result$result=='SUSPICIOUS',1] <- "verdächtig"
+result[result$result=='UNDEFINED',1] <- "unbekannt"
+result[result$result=='CLEAN',1] <- "sauber"
+p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("red","darkgreen","grey","orange")) %>%
+  layout(title = 'Ergebnisverteilung',
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+ggplotly(p)
+```
+
+CertificateChecker {data-navmenu="Einzelauswertungen"}
+=====================================
+
+Row
+-----------------------------------------------------------------------
+
+### Getestete Seiten
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'CertificateChecker'}", '{}',skip=0,limit=Inf)
+valueBox(nrow(result), icon="fa-bar-chart")
+```
+
+Row
+-----------------------------------------------------------------------
+
+### Ergebnisverteilung
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'CertificateChecker'}", '{result:1}',skip=0,limit=Inf)
+names(result)[2] <- "Anzahl"
+result <- aggregate(Anzahl ~ result,result,length)
+result[result$result=='MALICIOUS',1] <- "bedrohlich"
+result[result$result=='SUSPICIOUS',1] <- "verdächtig"
+result[result$result=='UNDEFINED',1] <- "unbekannt"
+result[result$result=='CLEAN',1] <- "sauber"
+p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("red","darkgreen","grey","orange")) %>%
+  layout(title = 'Ergebnisverteilung',
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+ggplotly(p)
 ```
 
 Ergebnisse durchsuchen
