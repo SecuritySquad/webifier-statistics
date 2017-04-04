@@ -160,7 +160,7 @@ result$pct <- 0.05
 for(i in 1:nrow(result)) {
     result[i,3] <- result[i,2] / tld_sum
 }
-result[result$pct<0.03,1] <- 'Andere'
+result[result$pct<0.01,1] <- 'Andere'
 result <- result[,-3]
 result <- aggregate(Anzahl ~ TLD,result,sum)
 
