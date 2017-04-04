@@ -153,15 +153,18 @@ ggplotly(p)
 ```{r}
 result <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{}", "{host:1,overallResultType:1}",skip=0,limit=Inf)
 result[,1] <- tld_extract(result[,1],NULL)[,2]
-names(result)[1] <- "TLD"
-tlds <- result[,-3]
-names(tlds)[2] <- "count"
-tlds <- aggregate(count ~ TLD,tlds,length)
-tld_sum <- sum(tlds$Anzahl)
-tlds[(tlds$Anzahl/tld_sum)<0.01,1] <- 'Andere'
-tlds <- aggregate(count ~ TLD,tlds,length)
-names(tlds) <- c('TLD','Anzahl')
-p <- plot_ly(tlds, labels = ~TLD, values = ~Anzahl, type = 'pie') %>%
+names(result) <- c('TLD','Anzahl','pct')
+result <- aggregate(Anzahl ~ TLD,result,length)
+tld_sum <- sum(result$Anzahl)
+result$pct <- 0.05
+for(i in 1:nrow(result)) {
+    result[i,3] <- result[i,2] / tld_sum
+}
+result[result$pct<0.05,1] <- 'Andere'
+result <- result[,-3]
+result <- aggregate(Anzahl ~ TLD,result,sum)
+
+p <- plot_ly(result, labels = ~TLD, values = ~Anzahl, type = 'pie') %>%
   layout(title = 'Verteilung der getesteten Top-Level-Domains',
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
