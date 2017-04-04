@@ -142,8 +142,8 @@ und.result <- result[result$Ergebnis=='unbekannt',]
 p <- plot_ly(alpha = 0.6) %>%
   add_histogram(x = ~mal.result$TLD, text="bedrohlich") %>%
   add_histogram(x = ~susp.result$TLD, text="verdächtig") %>%
-  add_histogram(x = ~und.result$TLD,text="unbekannt") %>%
-  layout(barmode = "stack", name="Prozentuale Erkennungen anhand Top-Level-Domains")
+  #add_histogram(x = ~und.result$TLD,text="unbekannt") %>%
+  layout(barmode = "stack", title="Prozentuale Erkennungen anhand Top-Level-Domains")
 ggplotly(p)
 
 ```
@@ -160,7 +160,7 @@ result$pct <- 0.05
 for(i in 1:nrow(result)) {
     result[i,3] <- result[i,2] / tld_sum
 }
-result[result$pct<0.05,1] <- 'Andere'
+result[result$pct<0.03,1] <- 'Andere'
 result <- result[,-3]
 result <- aggregate(Anzahl ~ TLD,result,sum)
 
