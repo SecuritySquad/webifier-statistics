@@ -15,6 +15,11 @@ params:
 ---
 
 ```{r setup, include=FALSE}
+#Colors:      
+COL.MALICIOUS<-"#d3061a"
+COL.SUSPICIOUS<-"#ff8833"
+COL.CLEAN<-"#007d25"
+COL.UNDEFINED<-"#e1e1e1"
 usePackage <- function(p)
 {
   if (!is.element(p, installed.packages()[,1]))
@@ -112,7 +117,7 @@ names(result) <- c('Testname','Ergebnis')
 p <- ggplot(data = result, aes(x = Testname, fill = Ergebnis)) +
             geom_bar(position = "dodge") +
             ylab("Anzahl") + 
-  scale_fill_manual(values=c("red","darkgreen","grey","orange"))
+  scale_fill_manual(values=c(COL.MALICIOUS,COL.CLEAN,COL.UNDEFINED,COL.SUSPICIOUS))
 ggplotly(p)
 
 ```
@@ -130,7 +135,7 @@ names(result) <- c('TLD','Ergebnis','id')
 p <- ggplot(data = result, aes(x = TLD, fill = Ergebnis),col="Anzahl") +
             geom_bar(position = "dodge") +
             ylab("Anzahl") + 
-  scale_fill_manual(values=c("red","grey","orange"))
+  scale_fill_manual(values=c(COL.MALICIOUS,COL.UNDEFINED,COL.SUSPICIOUS))
 ggplotly(p)
 
 ```
