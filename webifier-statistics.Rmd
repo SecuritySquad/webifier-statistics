@@ -84,16 +84,6 @@ gauge(value, min = 0, max = base, label = paste(round((value/base)*100),"%",sep=
 Row
 -----------------------------------------------------------------------
 
-### Die 100 bedrohlichsten Webseiten
-
-```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{overallResultType:'MALICIOUS'}", '{host:1,overallResultValue:1}',skip=0,limit=Inf)
-result <- result[order(result$overallResultValue,decreasing = TRUE),]
-result <- head(result,100)
-result$overallResultValue <- 1:nrow(result)
-names(result) <- c('host','Rang')
-datatable(result[,c(2,1)], options = list(pageLength = 10))
-```
 
 Gesamtauswertungen
 =====================================
@@ -424,6 +414,17 @@ p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 ggplotly(p)
+```
+
+Die Top 100 der bedrohlichsten Webseiten
+=====================================
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{overallResultType:'MALICIOUS'}", '{host:1,overallResultValue:1}',skip=0,limit=Inf)
+result <- result[order(result$overallResultValue,decreasing = TRUE),]
+result <- head(result,100)
+result$overallResultValue <- 1:nrow(result)
+names(result) <- c('host','Rang')
+datatable(result[,c(2,1)], options = list(pageLength = 10))
 ```
 
 Ergebnisse durchsuchen
