@@ -105,7 +105,7 @@ result <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{}", "{durationInMill
 result$durationInMillis <- result$durationInMillis/1000
 result<-result[order(result$overallResultType),]
 p <- plot_ly(data=result,y=result$durationInMillis,x=result$overallResultValue,color=result$overallResultType,colors=COL.LIST)  %>%
-  layout(xaxis = list(title="Ergebniswert"), yaxis = list(title="Zeit in Sekunden"))
+  layout(xaxis = list(title="Ergebniswert",range=list(0,1.1)), yaxis = list(title="Zeit in Sekunden"))
 ggplotly(p)
 ```
 
@@ -197,8 +197,16 @@ p <- plot_ly(result, labels = ~TLD, values = ~Anzahl, type = 'pie') %>%
 ggplotly(p)
 ```
 
-Virusscan {data-navmenu="Einzelauswertungen"}
+VirusScan {data-navmenu="Einzelauswertungen"}
 =====================================
+
+Row {data-height=40}
+-----------------------------------------------------------------------
+
+###Auswertungen
+```{r}
+valueBox("VirusScan", icon = "fa-bar-chart",color="blue")
+```
 
 Row
 -----------------------------------------------------------------------
@@ -248,12 +256,20 @@ result[result$result=="SUSPICIOUS",3]<-2
 result[result$result=="MALICIOUS",3]<-3
 result$X_id <- as.numeric(result$X_id)
 p <- plot_ly(data=result,y=result$durationInMillis,x=result$X_id,color=result$result,colors=COL.LIST)  %>%
-  layout(xaxis = list(title="Ergebnis",showticklabels=FALSE), yaxis = list(title="Zeit in Sekunden"))
+  layout(xaxis = list(title="Ergebnis",showticklabels=FALSE,range=list(0,4)), yaxis = list(title="Zeit in Sekunden"))
 ggplotly(p)
 ```
 
-Portscan {data-navmenu="Einzelauswertungen"}
+PortScan {data-navmenu="Einzelauswertungen"}
 =====================================
+
+Row {data-height=40}
+-----------------------------------------------------------------------
+
+###Auswertungen
+```{r}
+valueBox("PortScan", icon = "fa-bar-chart",color="blue")
+```
 
 Row
 -----------------------------------------------------------------------
@@ -303,12 +319,20 @@ result[result$result=="SUSPICIOUS",3]<-2
 result[result$result=="MALICIOUS",3]<-3
 result$X_id <- as.numeric(result$X_id)
 p <- plot_ly(data=result,y=result$durationInMillis,x=result$X_id,color=result$result,colors=COL.LIST)  %>%
-  layout(xaxis = list(title="Ergebnis",showticklabels=FALSE), yaxis = list(title="Zeit in Sekunden"))
+  layout(xaxis = list(title="Ergebnis",showticklabels=FALSE,range=list(0,4)), yaxis = list(title="Zeit in Sekunden"))
 ggplotly(p)
 ```
 
 IPScan {data-navmenu="Einzelauswertungen"}
 =====================================
+
+Row {data-height=40}
+-----------------------------------------------------------------------
+
+###Auswertungen
+```{r}
+valueBox("IPScan", icon = "fa-bar-chart",color="blue")
+```
 
 Row
 -----------------------------------------------------------------------
@@ -358,12 +382,20 @@ result[result$result=="SUSPICIOUS",3]<-2
 result[result$result=="MALICIOUS",3]<-3
 result$X_id <- as.numeric(result$X_id)
 p <- plot_ly(data=result,y=result$durationInMillis,x=result$X_id,color=result$result,colors=COL.LIST)  %>%
-  layout(xaxis = list(title="Ergebnis",showticklabels=FALSE), yaxis = list(title="Zeit in Sekunden"))
+  layout(xaxis = list(title="Ergebnis",showticklabels=FALSE,range=list(0,4)), yaxis = list(title="Zeit in Sekunden"))
 ggplotly(p)
 ```
 
 PhishingDetector {data-navmenu="Einzelauswertungen"}
 =====================================
+
+Row {data-height=40}
+-----------------------------------------------------------------------
+
+###Auswertungen
+```{r}
+valueBox("PhishingDetector", icon = "fa-bar-chart",color="blue")
+```
 
 Row
 -----------------------------------------------------------------------
@@ -413,12 +445,20 @@ result[result$result=="SUSPICIOUS",3]<-2
 result[result$result=="MALICIOUS",3]<-3
 result$X_id <- as.numeric(result$X_id)
 p <- plot_ly(data=result,y=result$durationInMillis,x=result$X_id,color=result$result,colors=COL.LIST)  %>%
-  layout(xaxis = list(title="Ergebnis",showticklabels=FALSE), yaxis = list(title="Zeit in Sekunden"))
+  layout(xaxis = list(title="Ergebnis",showticklabels=FALSE,range=list(0,4)), yaxis = list(title="Zeit in Sekunden"))
 ggplotly(p)
 ```
 
 HeaderInspection {data-navmenu="Einzelauswertungen"}
 =====================================
+
+Row {data-height=40}
+-----------------------------------------------------------------------
+
+###Auswertungen
+```{r}
+valueBox("HeaderInspection", icon = "fa-bar-chart",color="blue")
+```
 
 Row
 -----------------------------------------------------------------------
@@ -468,12 +508,20 @@ result[result$result=="SUSPICIOUS",3]<-2
 result[result$result=="MALICIOUS",3]<-3
 result$X_id <- as.numeric(result$X_id)
 p <- plot_ly(data=result,y=result$durationInMillis,x=result$X_id,color=result$result,colors=COL.LIST)  %>%
-  layout(xaxis = list(title="Ergebnis",showticklabels=FALSE), yaxis = list(title="Zeit in Sekunden"))
+  layout(xaxis = list(title="Ergebnis",showticklabels=FALSE,range=list(0,4)), yaxis = list(title="Zeit in Sekunden"))
 ggplotly(p)
 ```
 
 LinkChecker {data-navmenu="Einzelauswertungen"}
 =====================================
+
+Row {data-height=40}
+-----------------------------------------------------------------------
+
+###Auswertungen
+```{r}
+valueBox("LinkChecker", icon = "fa-bar-chart",color="blue")
+```
 
 Row
 -----------------------------------------------------------------------
@@ -523,12 +571,20 @@ result[result$result=="SUSPICIOUS",3]<-2
 result[result$result=="MALICIOUS",3]<-3
 result$X_id <- as.numeric(result$X_id)
 p <- plot_ly(data=result,y=result$durationInMillis,x=result$X_id,color=result$result,colors=COL.LIST)  %>%
-  layout(xaxis = list(title="Ergebnis",showticklabels=FALSE), yaxis = list(title="Zeit in Sekunden"))
+  layout(xaxis = list(title="Ergebnis",showticklabels=FALSE,range=list(0,4)), yaxis = list(title="Zeit in Sekunden"))
 ggplotly(p)
 ```
 
 GoogleSafeBrowsing {data-navmenu="Einzelauswertungen"}
 =====================================
+
+Row {data-height=40}
+-----------------------------------------------------------------------
+
+###Auswertungen
+```{r}
+valueBox("GoogleSafeBrowsing", icon = "fa-bar-chart",color="blue")
+```
 
 Row
 -----------------------------------------------------------------------
@@ -578,12 +634,20 @@ result[result$result=="SUSPICIOUS",3]<-2
 result[result$result=="MALICIOUS",3]<-3
 result$X_id <- as.numeric(result$X_id)
 p <- plot_ly(data=result,y=result$durationInMillis,x=result$X_id,color=result$result,colors=COL.LIST)  %>%
-  layout(xaxis = list(title="Ergebnis",showticklabels=FALSE), yaxis = list(title="Zeit in Sekunden"))
+  layout(xaxis = list(title="Ergebnis",showticklabels=FALSE,range=list(0,4)), yaxis = list(title="Zeit in Sekunden"))
 ggplotly(p)
 ```
 
 CertificateChecker {data-navmenu="Einzelauswertungen"}
 =====================================
+
+Row {data-height=40}
+-----------------------------------------------------------------------
+
+###Auswertungen
+```{r}
+valueBox("CertificateChecker", icon = "fa-bar-chart",color="blue")
+```
 
 Row
 -----------------------------------------------------------------------
@@ -633,7 +697,7 @@ result[result$result=="SUSPICIOUS",3]<-2
 result[result$result=="MALICIOUS",3]<-3
 result$X_id <- as.numeric(result$X_id)
 p <- plot_ly(data=result,y=result$durationInMillis,x=result$X_id,color=result$result,colors=COL.LIST)  %>%
-  layout(xaxis = list(title="Ergebnis",showticklabels=FALSE), yaxis = list(title="Zeit in Sekunden"))
+  layout(xaxis = list(title="Ergebnis",showticklabels=FALSE,range=list(0,4)), yaxis = list(title="Zeit in Sekunden"))
 ggplotly(p)
 ```
 
