@@ -20,6 +20,7 @@ COL.MALICIOUS<-"#d3061a"
 COL.SUSPICIOUS<-"#ff8833"
 COL.CLEAN<-"#007d25"
 COL.UNDEFINED<-"#e1e1e1"
+COL.LIST <- c(COL.CLEAN,COL.MALICIOUS,COL.SUSPICIOUS,COL.UNDEFINED)
 usePackage <- function(p)
 {
   if (!is.element(p, installed.packages()[,1]))
@@ -97,6 +98,16 @@ valueBox(paste(mean.dur,'s',sep=""), icon="fa-hourglass-half",color="grey")
 
 Row
 -----------------------------------------------------------------------
+
+### Verhältnis von Zeit zu Testergebnis
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{}", "{durationInMillis:1,overallResultType:1,overallResultValue:1}",skip=0,limit=Inf)
+result$durationInMillis <- result$durationInMillis/1000
+result<-result[order(result$overallResultType),]
+p <- plot_ly(data=result,y=result$durationInMillis,x=result$overallResultValue,color=result$overallResultType,colors=COL.LIST)  %>%
+  layout(xaxis = list(title="Ergebniswert"), yaxis = list(title="Zeit in Sekunden"))
+ggplotly(p)
+```
 
 Gesamtauswertungen
 =====================================
@@ -186,11 +197,6 @@ p <- plot_ly(result, labels = ~TLD, values = ~Anzahl, type = 'pie') %>%
 ggplotly(p)
 ```
 
-### Verhältnis von Zeit zu Testergebnis
-```{r}
-
-```
-
 Virusscan {data-navmenu="Einzelauswertungen"}
 =====================================
 
@@ -228,6 +234,21 @@ p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("
   layout(title = 'Ergebnisverteilung',
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+ggplotly(p)
+```
+
+### Verhältnis von Zeit zu Testergebnis
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'VirusScan'}", "{durationInMillis:1,result:1}",skip=0,limit=Inf)
+result$durationInMillis <- result$durationInMillis/1000
+result<-result[order(result$result),]
+result[result$result=="UNDEFINED",3]<-0
+result[result$result=="CLEAN",3]<-1
+result[result$result=="SUSPICIOUS",3]<-2
+result[result$result=="MALICIOUS",3]<-3
+result$X_id <- as.numeric(result$X_id)
+p <- plot_ly(data=result,y=result$durationInMillis,x=result$X_id,color=result$result,colors=COL.LIST)  %>%
+  layout(xaxis = list(title="Ergebnis",showticklabels=FALSE), yaxis = list(title="Zeit in Sekunden"))
 ggplotly(p)
 ```
 
@@ -271,6 +292,21 @@ p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("
 ggplotly(p)
 ```
 
+### Verhältnis von Zeit zu Testergebnis
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'PortScan'}", "{durationInMillis:1,result:1}",skip=0,limit=Inf)
+result$durationInMillis <- result$durationInMillis/1000
+result<-result[order(result$result),]
+result[result$result=="UNDEFINED",3]<-0
+result[result$result=="CLEAN",3]<-1
+result[result$result=="SUSPICIOUS",3]<-2
+result[result$result=="MALICIOUS",3]<-3
+result$X_id <- as.numeric(result$X_id)
+p <- plot_ly(data=result,y=result$durationInMillis,x=result$X_id,color=result$result,colors=COL.LIST)  %>%
+  layout(xaxis = list(title="Ergebnis",showticklabels=FALSE), yaxis = list(title="Zeit in Sekunden"))
+ggplotly(p)
+```
+
 IPScan {data-navmenu="Einzelauswertungen"}
 =====================================
 
@@ -311,6 +347,20 @@ p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("
 ggplotly(p)
 ```
 
+### Verhältnis von Zeit zu Testergebnis
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'IpScan'}", "{durationInMillis:1,result:1}",skip=0,limit=Inf)
+result$durationInMillis <- result$durationInMillis/1000
+result<-result[order(result$result),]
+result[result$result=="UNDEFINED",3]<-0
+result[result$result=="CLEAN",3]<-1
+result[result$result=="SUSPICIOUS",3]<-2
+result[result$result=="MALICIOUS",3]<-3
+result$X_id <- as.numeric(result$X_id)
+p <- plot_ly(data=result,y=result$durationInMillis,x=result$X_id,color=result$result,colors=COL.LIST)  %>%
+  layout(xaxis = list(title="Ergebnis",showticklabels=FALSE), yaxis = list(title="Zeit in Sekunden"))
+ggplotly(p)
+```
 
 PhishingDetector {data-navmenu="Einzelauswertungen"}
 =====================================
@@ -352,6 +402,20 @@ p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("
 ggplotly(p)
 ```
 
+### Verhältnis von Zeit zu Testergebnis
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'PhishingDetector'}", "{durationInMillis:1,result:1}",skip=0,limit=Inf)
+result$durationInMillis <- result$durationInMillis/1000
+result<-result[order(result$result),]
+result[result$result=="UNDEFINED",3]<-0
+result[result$result=="CLEAN",3]<-1
+result[result$result=="SUSPICIOUS",3]<-2
+result[result$result=="MALICIOUS",3]<-3
+result$X_id <- as.numeric(result$X_id)
+p <- plot_ly(data=result,y=result$durationInMillis,x=result$X_id,color=result$result,colors=COL.LIST)  %>%
+  layout(xaxis = list(title="Ergebnis",showticklabels=FALSE), yaxis = list(title="Zeit in Sekunden"))
+ggplotly(p)
+```
 
 HeaderInspection {data-navmenu="Einzelauswertungen"}
 =====================================
@@ -390,6 +454,21 @@ p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("
   layout(title = 'Ergebnisverteilung',
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+ggplotly(p)
+```
+
+### Verhältnis von Zeit zu Testergebnis
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'HeaderInspection'}", "{durationInMillis:1,result:1}",skip=0,limit=Inf)
+result$durationInMillis <- result$durationInMillis/1000
+result<-result[order(result$result),]
+result[result$result=="UNDEFINED",3]<-0
+result[result$result=="CLEAN",3]<-1
+result[result$result=="SUSPICIOUS",3]<-2
+result[result$result=="MALICIOUS",3]<-3
+result$X_id <- as.numeric(result$X_id)
+p <- plot_ly(data=result,y=result$durationInMillis,x=result$X_id,color=result$result,colors=COL.LIST)  %>%
+  layout(xaxis = list(title="Ergebnis",showticklabels=FALSE), yaxis = list(title="Zeit in Sekunden"))
 ggplotly(p)
 ```
 
@@ -433,6 +512,21 @@ p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("
 ggplotly(p)
 ```
 
+### Verhältnis von Zeit zu Testergebnis
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'LinkChecker'}", "{durationInMillis:1,result:1}",skip=0,limit=Inf)
+result$durationInMillis <- result$durationInMillis/1000
+result<-result[order(result$result),]
+result[result$result=="UNDEFINED",3]<-0
+result[result$result=="CLEAN",3]<-1
+result[result$result=="SUSPICIOUS",3]<-2
+result[result$result=="MALICIOUS",3]<-3
+result$X_id <- as.numeric(result$X_id)
+p <- plot_ly(data=result,y=result$durationInMillis,x=result$X_id,color=result$result,colors=COL.LIST)  %>%
+  layout(xaxis = list(title="Ergebnis",showticklabels=FALSE), yaxis = list(title="Zeit in Sekunden"))
+ggplotly(p)
+```
+
 GoogleSafeBrowsing {data-navmenu="Einzelauswertungen"}
 =====================================
 
@@ -473,6 +567,21 @@ p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("
 ggplotly(p)
 ```
 
+### Verhältnis von Zeit zu Testergebnis
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'GoogleSafeBrowsing'}", "{durationInMillis:1,result:1}",skip=0,limit=Inf)
+result$durationInMillis <- result$durationInMillis/1000
+result<-result[order(result$result),]
+result[result$result=="UNDEFINED",3]<-0
+result[result$result=="CLEAN",3]<-1
+result[result$result=="SUSPICIOUS",3]<-2
+result[result$result=="MALICIOUS",3]<-3
+result$X_id <- as.numeric(result$X_id)
+p <- plot_ly(data=result,y=result$durationInMillis,x=result$X_id,color=result$result,colors=COL.LIST)  %>%
+  layout(xaxis = list(title="Ergebnis",showticklabels=FALSE), yaxis = list(title="Zeit in Sekunden"))
+ggplotly(p)
+```
+
 CertificateChecker {data-navmenu="Einzelauswertungen"}
 =====================================
 
@@ -510,6 +619,21 @@ p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("
   layout(title = 'Ergebnisverteilung',
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+ggplotly(p)
+```
+
+### Verhältnis von Zeit zu Testergebnis
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'CertificateChecker'}", "{durationInMillis:1,result:1}",skip=0,limit=Inf)
+result$durationInMillis <- result$durationInMillis/1000
+result<-result[order(result$result),]
+result[result$result=="UNDEFINED",3]<-0
+result[result$result=="CLEAN",3]<-1
+result[result$result=="SUSPICIOUS",3]<-2
+result[result$result=="MALICIOUS",3]<-3
+result$X_id <- as.numeric(result$X_id)
+p <- plot_ly(data=result,y=result$durationInMillis,x=result$X_id,color=result$result,colors=COL.LIST)  %>%
+  layout(xaxis = list(title="Ergebnis",showticklabels=FALSE), yaxis = list(title="Zeit in Sekunden"))
 ggplotly(p)
 ```
 
