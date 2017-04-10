@@ -186,6 +186,10 @@ p <- plot_ly(result, labels = ~TLD, values = ~Anzahl, type = 'pie') %>%
 ggplotly(p)
 ```
 
+### Verhältnis von Zeit zu Testergebnis
+```{r}
+
+```
 
 Virusscan {data-navmenu="Einzelauswertungen"}
 =====================================
@@ -199,11 +203,21 @@ result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'VirusSca
 valueBox(nrow(result), icon="fa-bar-chart")
 ```
 
+### Durchschnittliche Analysezeit
+
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'VirusScan'}", "{durationInMillis:1}",skip=0,limit=Inf)
+mean.dur <- mean(result$durationInMillis)/1000
+mean.dur <- round(mean.dur)
+valueBox(paste(mean.dur,'s',sep=""), icon="fa-hourglass-half",color="grey")
+```
+
 Row
 -----------------------------------------------------------------------
 
 ### Ergebnisverteilung
 ```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'VirusScan'}", '{result:1}',skip=0,limit=Inf)
 names(result)[2] <- "Anzahl"
 result <- aggregate(Anzahl ~ result,result,length)
 result[result$result=='MALICIOUS',1] <- "bedrohlich"
@@ -229,11 +243,21 @@ result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'PortScan
 valueBox(nrow(result), icon="fa-bar-chart")
 ```
 
+### Durchschnittliche Analysezeit
+
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'PortScan'}", "{durationInMillis:1}",skip=0,limit=Inf)
+mean.dur <- mean(result$durationInMillis)/1000
+mean.dur <- round(mean.dur)
+valueBox(paste(mean.dur,'s',sep=""), icon="fa-hourglass-half",color="grey")
+```
+
 Row
 -----------------------------------------------------------------------
 
 ### Ergebnisverteilung
 ```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'PortScan'}", '{result:1}',skip=0,limit=Inf)
 names(result)[2] <- "Anzahl"
 result <- aggregate(Anzahl ~ result,result,length)
 result[result$result=='MALICIOUS',1] <- "bedrohlich"
@@ -259,11 +283,21 @@ result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'IpScan'}
 valueBox(nrow(result), icon="fa-bar-chart")
 ```
 
+### Durchschnittliche Analysezeit
+
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'IpScan'}", "{durationInMillis:1}",skip=0,limit=Inf)
+mean.dur <- mean(result$durationInMillis)/1000
+mean.dur <- round(mean.dur)
+valueBox(paste(mean.dur,'s',sep=""), icon="fa-hourglass-half",color="grey")
+```
+
 Row
 -----------------------------------------------------------------------
 
 ### Ergebnisverteilung
 ```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'IpScan'}", '{result:1}',skip=0,limit=Inf)
 names(result)[2] <- "Anzahl"
 result <- aggregate(Anzahl ~ result,result,length)
 result[result$result=='MALICIOUS',1] <- "bedrohlich"
@@ -290,11 +324,21 @@ result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'Phishing
 valueBox(nrow(result), icon="fa-bar-chart")
 ```
 
+### Durchschnittliche Analysezeit
+
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'PhishingDetector'}", "{durationInMillis:1}",skip=0,limit=Inf)
+mean.dur <- mean(result$durationInMillis)/1000
+mean.dur <- round(mean.dur)
+valueBox(paste(mean.dur,'s',sep=""), icon="fa-hourglass-half",color="grey")
+```
+
 Row
 -----------------------------------------------------------------------
 
 ### Ergebnisverteilung
 ```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'PhishingDetector'}", '{result:1}',skip=0,limit=Inf)
 names(result)[2] <- "Anzahl"
 result <- aggregate(Anzahl ~ result,result,length)
 result[result$result=='MALICIOUS',1] <- "bedrohlich"
@@ -321,11 +365,21 @@ result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'HeaderIn
 valueBox(nrow(result), icon="fa-bar-chart")
 ```
 
+### Durchschnittliche Analysezeit
+
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'HeaderInspection'}", "{durationInMillis:1}",skip=0,limit=Inf)
+mean.dur <- mean(result$durationInMillis)/1000
+mean.dur <- round(mean.dur)
+valueBox(paste(mean.dur,'s',sep=""), icon="fa-hourglass-half",color="grey")
+```
+
 Row
 -----------------------------------------------------------------------
 
 ### Ergebnisverteilung
 ```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'HeaderInspection'}", '{result:1}',skip=0,limit=Inf)
 names(result)[2] <- "Anzahl"
 result <- aggregate(Anzahl ~ result,result,length)
 result[result$result=='MALICIOUS',1] <- "bedrohlich"
@@ -351,11 +405,21 @@ result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'LinkChec
 valueBox(nrow(result), icon="fa-bar-chart")
 ```
 
+### Durchschnittliche Analysezeit
+
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'LinkChecker'}", "{durationInMillis:1}",skip=0,limit=Inf)
+mean.dur <- mean(result$durationInMillis)/1000
+mean.dur <- round(mean.dur)
+valueBox(paste(mean.dur,'s',sep=""), icon="fa-hourglass-half",color="grey")
+```
+
 Row
 -----------------------------------------------------------------------
 
 ### Ergebnisverteilung
 ```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'LinkChecker'}", '{result:1}',skip=0,limit=Inf)
 names(result)[2] <- "Anzahl"
 result <- aggregate(Anzahl ~ result,result,length)
 result[result$result=='MALICIOUS',1] <- "bedrohlich"
@@ -381,11 +445,21 @@ result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'GoogleSa
 valueBox(nrow(result), icon="fa-bar-chart")
 ```
 
+### Durchschnittliche Analysezeit
+
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'GoogleSafeBrowsing'}", "{durationInMillis:1}",skip=0,limit=Inf)
+mean.dur <- mean(result$durationInMillis)/1000
+mean.dur <- round(mean.dur)
+valueBox(paste(mean.dur,'s',sep=""), icon="fa-hourglass-half",color="grey")
+```
+
 Row
 -----------------------------------------------------------------------
 
 ### Ergebnisverteilung
 ```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'GoogleSafeBrowsing'}", '{result:1}',skip=0,limit=Inf)
 names(result)[2] <- "Anzahl"
 result <- aggregate(Anzahl ~ result,result,length)
 result[result$result=='MALICIOUS',1] <- "bedrohlich"
@@ -411,11 +485,21 @@ result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'Certific
 valueBox(nrow(result), icon="fa-bar-chart")
 ```
 
+### Durchschnittliche Analysezeit
+
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'CertificateChecker'}", "{durationInMillis:1}",skip=0,limit=Inf)
+mean.dur <- mean(result$durationInMillis)/1000
+mean.dur <- round(mean.dur)
+valueBox(paste(mean.dur,'s',sep=""), icon="fa-hourglass-half",color="grey")
+```
+
 Row
 -----------------------------------------------------------------------
 
 ### Ergebnisverteilung
 ```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'CertificateChecker'}", '{result:1}',skip=0,limit=Inf)
 names(result)[2] <- "Anzahl"
 result <- aggregate(Anzahl ~ result,result,length)
 result[result$result=='MALICIOUS',1] <- "bedrohlich"
