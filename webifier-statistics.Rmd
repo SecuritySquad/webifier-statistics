@@ -111,6 +111,7 @@ names(result) <- c('Datum','Ergebnis','Anzahl')
 locale <- Sys.setlocale("LC_TIME", "en_US.UTF-8")
 format <- "%a %b %d %H:%M:%S CEST %Y"
 result[,1] <- format(as.Date(as.POSIXct(result[,1],format, tz="CET")),"%d-%m-%Y")
+result <- result[!is.na(result$Datum),]
 result <- result[order(result$Datum),]
 first <- result[1,1]  
 last <-  result[nrow(result),1]
