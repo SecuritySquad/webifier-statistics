@@ -113,7 +113,7 @@ format <- "%a %b %d %H:%M:%S CEST %Y"
 result[,1] <- format(as.Date(as.POSIXct(result[,1],format, tz="CET")),"%d-%m-%Y")
 result <- result[order(result$Datum),]
 first <- result[1,1] 
-last <-  result[length(result),1]
+last <-  result[nrow(result),1]
 dates <- seq(as.Date(first,"%d-%m-%Y"), as.Date(last,"%d-%m-%Y"), "day")
 result <- aggregate(Anzahl ~ Ergebnis+Datum,result,length)
 
