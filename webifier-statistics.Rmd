@@ -115,7 +115,7 @@ result <- result[!is.na(result$Datum),]
 result <- result[order(result$Datum),]
 first <- result[1,1]  
 last <-  result[nrow(result),1]
-dates <- seq(as.Date(first,"%d-%m-%Y"), as.Date(last,"%d-%m-%Y"), "day")
+dates <- seq(as.Date(first,"%d-%m-%Y"), as.Date("30-04-2017","%d-%m-%Y"), "day")
 result <- aggregate(Anzahl ~ Ergebnis+Datum,result,length)
 
 mal.result <- data.frame(dates)
