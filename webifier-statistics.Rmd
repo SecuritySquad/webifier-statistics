@@ -103,7 +103,7 @@ valueBox(paste(mean.dur,'s',sep=""), icon="fa-hourglass-half",color="grey")
 Row
 -----------------------------------------------------------------------
 
-### Analysierte Seiten pro Tag
+### Analysierte Seiten pro Tag {data-width=400}
 
 ```{r}
 result <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{}", "{datetime:1,overallResultType:1}",skip=0,limit=Inf)
@@ -157,11 +157,15 @@ dygraph(xts) %>%
   dyRangeSelector(height = 20)
 ```
 
-Gesamtauswertungen
-=====================================
+### Willkommen! {data-width=100}
 
-Row {.tabset .tabset-fade}
------------------------------------------------------------------------
+Willkommen auf webifier Statistics! \n
+Hier finden sie Auswertungen, zu den durch webifier gewonnenen, Daten. \n
+Auf dem Dashboard finden sie einige allgemeine Zahlen und Graphiken zu den ausgewerteten Daten. \n
+Des Weiteren können sie hier graphische Aufbereitungen der Testergebnisse finden. Diese sind unterteilt in Gesamtergebnisse und spezifischen Auswertungen zu den einzelnen Tests.
+
+Gesamtauswertungen {.storyboard}
+=====================================
 
 ### Testergebnisverteilung
 
