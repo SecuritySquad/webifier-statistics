@@ -35,6 +35,8 @@ usePackage('urltools')
 usePackage('DT')
 usePackage('dygraphs')
 usePackage('xts')
+usePackage('lubridate')
+library('lubridate')
 library('flexdashboard')
 library('urltools')
 library('RMongo')
@@ -97,7 +99,8 @@ gauge(value, min = 0, max = base, label = paste(round((value/base)*100),"%",sep=
 result <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{}", "{durationInMillis:1}",skip=0,limit=Inf)
 mean.dur <- mean(result$durationInMillis)/1000
 mean.dur <- round(mean.dur)
-valueBox(paste(mean.dur,'s',sep=""), icon="fa-hourglass-half",color="grey")
+tp <- seconds_to_period(mean.dur)
+valueBox(paste(minute(tp),'min ',second(tp),'s',sep=""), icon="fa-hourglass-half",color="grey")
 ```
 
 Row
@@ -275,7 +278,8 @@ valueBox(nrow(result), icon="fa-bar-chart")
 result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'VirusScan'}", "{durationInMillis:1}",skip=0,limit=Inf)
 mean.dur <- mean(result$durationInMillis)/1000
 mean.dur <- round(mean.dur)
-valueBox(paste(mean.dur,'s',sep=""), icon="fa-hourglass-half",color="grey")
+tp <- seconds_to_period(mean.dur)
+valueBox(paste(minute(tp),'min ',second(tp),'s',sep=""), icon="fa-hourglass-half",color="grey")
 ```
 
 Row
@@ -323,7 +327,8 @@ valueBox(nrow(result), icon="fa-bar-chart")
 result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'PortScan'}", "{durationInMillis:1}",skip=0,limit=Inf)
 mean.dur <- mean(result$durationInMillis)/1000
 mean.dur <- round(mean.dur)
-valueBox(paste(mean.dur,'s',sep=""), icon="fa-hourglass-half",color="grey")
+tp <- seconds_to_period(mean.dur)
+valueBox(paste(minute(tp),'min ',second(tp),'s',sep=""), icon="fa-hourglass-half",color="grey")
 ```
 
 Row
@@ -371,7 +376,8 @@ valueBox(nrow(result), icon="fa-bar-chart")
 result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'IpScan'}", "{durationInMillis:1}",skip=0,limit=Inf)
 mean.dur <- mean(result$durationInMillis)/1000
 mean.dur <- round(mean.dur)
-valueBox(paste(mean.dur,'s',sep=""), icon="fa-hourglass-half",color="grey")
+tp <- seconds_to_period(mean.dur)
+valueBox(paste(minute(tp),'min ',second(tp),'s',sep=""), icon="fa-hourglass-half",color="grey")
 ```
 
 Row
@@ -419,7 +425,8 @@ valueBox(nrow(result), icon="fa-bar-chart")
 result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'PhishingDetector'}", "{durationInMillis:1}",skip=0,limit=Inf)
 mean.dur <- mean(result$durationInMillis)/1000
 mean.dur <- round(mean.dur)
-valueBox(paste(mean.dur,'s',sep=""), icon="fa-hourglass-half",color="grey")
+tp <- seconds_to_period(mean.dur)
+valueBox(paste(minute(tp),'min ',second(tp),'s',sep=""), icon="fa-hourglass-half",color="grey")
 ```
 
 Row
@@ -467,7 +474,8 @@ valueBox(nrow(result), icon="fa-bar-chart")
 result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'HeaderInspection'}", "{durationInMillis:1}",skip=0,limit=Inf)
 mean.dur <- mean(result$durationInMillis)/1000
 mean.dur <- round(mean.dur)
-valueBox(paste(mean.dur,'s',sep=""), icon="fa-hourglass-half",color="grey")
+tp <- seconds_to_period(mean.dur)
+valueBox(paste(minute(tp),'min ',second(tp),'s',sep=""), icon="fa-hourglass-half",color="grey")
 ```
 
 Row
@@ -515,7 +523,8 @@ valueBox(nrow(result), icon="fa-bar-chart")
 result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'LinkChecker'}", "{durationInMillis:1}",skip=0,limit=Inf)
 mean.dur <- mean(result$durationInMillis)/1000
 mean.dur <- round(mean.dur)
-valueBox(paste(mean.dur,'s',sep=""), icon="fa-hourglass-half",color="grey")
+tp <- seconds_to_period(mean.dur)
+valueBox(paste(minute(tp),'min ',second(tp),'s',sep=""), icon="fa-hourglass-half",color="grey")
 ```
 
 Row
@@ -563,7 +572,8 @@ valueBox(nrow(result), icon="fa-bar-chart")
 result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'GoogleSafeBrowsing'}", "{durationInMillis:1}",skip=0,limit=Inf)
 mean.dur <- mean(result$durationInMillis)/1000
 mean.dur <- round(mean.dur)
-valueBox(paste(mean.dur,'s',sep=""), icon="fa-hourglass-half",color="grey")
+tp <- seconds_to_period(mean.dur)
+valueBox(paste(minute(tp),'min ',second(tp),'s',sep=""), icon="fa-hourglass-half",color="grey")
 ```
 
 Row
@@ -611,7 +621,8 @@ valueBox(nrow(result), icon="fa-bar-chart")
 result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'CertificateChecker'}", "{durationInMillis:1}",skip=0,limit=Inf)
 mean.dur <- mean(result$durationInMillis)/1000
 mean.dur <- round(mean.dur)
-valueBox(paste(mean.dur,'s',sep=""), icon="fa-hourglass-half",color="grey")
+tp <- seconds_to_period(mean.dur)
+valueBox(paste(minute(tp),'min ',second(tp),'s',sep=""), icon="fa-hourglass-half",color="grey")
 ```
 
 Row
