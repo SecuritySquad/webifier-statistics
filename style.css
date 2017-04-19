@@ -78,35 +78,35 @@ img.navbar-logo {
 }
 
 .navbar .navbar-nav li a {
-  color: rgba(0,0,0,.5);
+  color: rgba(0,0,0,.5) !important;
   display: block;
   padding-top: .425rem;
   padding-bottom: .425rem;
 }
 
 .navbar-nav .open .dropdown-menu>li>a {
-  color: rgba(0,0,0,.5);
+  color: rgba(0,0,0,.5) !important;
 }
 
 .navbar .navbar-nav li a:focus, .navbar .navbar-nav li a:hover {
-    color: rgba(0,0,0,.7);
-    background-color: transparent;
+    color: rgba(0,0,0,.7) !important;
+    background-color: transparent !important;
     outline: 0;
 }
 
 .navbar-nav .open .dropdown-menu>li>a:hover, .navbar-nav .open .dropdown-menu>li>a:focus {
-    color: rgba(0,0,0,.7);
-    background-color: transparent;
+    color: rgba(0,0,0,.7) !important;
+    background-color: transparent !important;
 }
 
 .navbar .navbar-nav li.active a, .navbar .navbar-nav li.active a:hover, .navbar .navbar-nav li.active a:focus {
-    color: rgba(0,0,0,.9);
-    background-color: transparent;
+    color: rgba(0,0,0,.9) !important;
+    background-color: transparent !important;
 }
 
 .navbar-nav>.open>a, .navbar-nav>.open>a:hover, .navbar-nav>.open>a:focus {
-    color: rgba(0,0,0,.9);
-    background-color: transparent;
+    color: rgba(0,0,0,.9) !important;
+    background-color: transparent !important;
 }
 
 .navbar-collapse {
