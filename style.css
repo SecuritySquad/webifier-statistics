@@ -70,7 +70,7 @@ img.navbar-logo {
 }
 
 .navbar-toggle .icon-bar {
-    background-color: rgba(0,0,0,.9) !important¢;
+    background-color: rgba(0,0,0,.9) !important;
 }
 
 .navbar-inverse .navbar-toggle:hover, .navbar-inverse .navbar-toggle:focus {
@@ -84,13 +84,27 @@ img.navbar-logo {
   padding-bottom: .425rem;
 }
 
+.navbar-nav .open .dropdown-menu>li>a {
+  color: rgba(0,0,0,.5);
+}
+
 .navbar .navbar-nav li a:focus, .navbar .navbar-nav li a:hover {
     color: rgba(0,0,0,.7);
     background-color: transparent;
     outline: 0;
 }
 
+.navbar-nav .open .dropdown-menu>li>a:hover, .navbar-nav .open .dropdown-menu>li>a:focus {
+    color: rgba(0,0,0,.7);
+    background-color: transparent;
+}
+
 .navbar .navbar-nav li.active a, .navbar .navbar-nav li.active a:hover, .navbar .navbar-nav li.active a:focus {
+    color: rgba(0,0,0,.9);
+    background-color: transparent;
+}
+
+.navbar-nav>.open>a, .navbar-nav>.open>a:hover, .navbar-nav>.open>a:focus {
     color: rgba(0,0,0,.9);
     background-color: transparent;
 }
