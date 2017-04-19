@@ -33,6 +33,10 @@ usePackage('plotly')
 usePackage('ggplot2')
 usePackage('urltools')
 usePackage('DT')
+usePackage('dygraphs')
+usePackage('xts')
+usePackage('lubridate')
+library('lubridate')
 library('flexdashboard')
 library('urltools')
 library('RMongo')
@@ -40,6 +44,8 @@ library('RJSONIO')
 library('plotly')
 library('ggplot2')
 library('DT')
+library('dygraphs')
+library('xts')
 mg1 <- mongoDbConnect(params$dbname)
 print(dbShowCollections(mg1))
 ```
@@ -93,27 +99,76 @@ gauge(value, min = 0, max = base, label = paste(round((value/base)*100),"%",sep=
 result <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{}", "{durationInMillis:1}",skip=0,limit=Inf)
 mean.dur <- mean(result$durationInMillis)/1000
 mean.dur <- round(mean.dur)
-valueBox(paste(mean.dur,'s',sep=""), icon="fa-hourglass-half",color="grey")
+tp <- seconds_to_period(mean.dur)
+valueBox(paste(minute(tp),'min ',second(tp),'s',sep=""), icon="fa-hourglass-half",color="grey")
 ```
 
 Row
 -----------------------------------------------------------------------
 
-### Verhältnis von Zeit zu Testergebnis
+### Analysierte Seiten pro Tag {data-width=400}
+
 ```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{}", "{durationInMillis:1,overallResultType:1,overallResultValue:1}",skip=0,limit=Inf)
-result$durationInMillis <- result$durationInMillis/1000
-result<-result[order(result$overallResultType),]
-p <- plot_ly(data=result,y=result$durationInMillis,x=result$overallResultValue,color=result$overallResultType,colors=COL.LIST)  %>%
-  layout(xaxis = list(title="Ergebniswert",range=list(0,1.1)), yaxis = list(title="Zeit in Sekunden"))
-ggplotly(p)
+result <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{}", "{datetime:1,overallResultType:1}",skip=0,limit=Inf)
+names(result) <- c('Datum','Ergebnis','Anzahl')
+locale <- Sys.setlocale("LC_TIME", "en_US.UTF-8")
+format <- "%a %b %d %H:%M:%S CEST %Y"
+result[,1] <- format(as.Date(as.POSIXct(result[,1],format, tz="CET")),"%d-%m-%Y")
+result <- result[!is.na(result$Datum),]
+result <- result[order(result$Datum),]
+first <- result[1,1]  
+last <-  format(Sys.Date(),"%d-%m-%Y")
+dates <- seq(as.Date(first,"%d-%m-%Y"), as.Date(last,"%d-%m-%Y"), "day")
+result <- aggregate(Anzahl ~ Ergebnis+Datum,result,length)
+
+mal.result <- data.frame(dates)
+colnames(mal.result) <- c("Datum")
+mal.result$Datum <- format(mal.result$Datum,"%d-%m-%Y")
+mal.result <- merge(x=mal.result,y=result[result$Ergebnis=="MALICIOUS",c(2,3)],by="Datum",all.x=TRUE)
+mal.result[is.na(mal.result$Anzahl),2] <- 0
+
+sus.result <- data.frame(dates)
+colnames(sus.result) <- c("Datum")
+sus.result$Datum <- format(sus.result$Datum,"%d-%m-%Y")
+sus.result <- merge(x=sus.result,y=result[result$Ergebnis=="SUSPICIOUS",c(2,3)],by="Datum",all.x=TRUE)
+sus.result[is.na(sus.result$Anzahl),2] <- 0
+
+und.result <- data.frame(dates)
+colnames(und.result) <- c("Datum")
+und.result$Datum <- format(und.result$Datum,"%d-%m-%Y")
+und.result <- merge(x=und.result,y=result[result$Ergebnis=="UNDEFINED",c(2,3)],by="Datum",all.x=TRUE)
+und.result[is.na(und.result$Anzahl),2] <- 0
+
+cle.result <- data.frame(dates)
+colnames(cle.result) <- c("Datum")
+cle.result$Datum <- format(cle.result$Datum,"%d-%m-%Y")
+cle.result <- merge(x=cle.result,y=result[result$Ergebnis=="CLEAN",c(2,3)],by="Datum",all.x=TRUE)
+cle.result[is.na(cle.result$Anzahl),2] <- 0
+
+malxts <- xts(mal.result$Anzahl, order.by=as.Date(mal.result$Datum,"%d-%m-%Y"))
+undxts <- xts(und.result$Anzahl, order.by=as.Date(und.result$Datum,"%d-%m-%Y"))
+susxts <- xts(sus.result$Anzahl, order.by=as.Date(sus.result$Datum,"%d-%m-%Y"))
+clexts <- xts(cle.result$Anzahl, order.by=as.Date(cle.result$Datum,"%d-%m-%Y"))
+xts <- cbind(malxts,undxts,susxts,clexts)
+colnames(xts) <- c("malxts","undxts","susxts","clexts")
+dygraph(xts) %>%
+  dySeries("undxts", label = "unbekannt",color=COL.UNDEFINED) %>%
+  dySeries("clexts", label = "sauber",color=COL.CLEAN) %>%
+  dySeries("susxts", label = "verdächtig",color=COL.SUSPICIOUS) %>%
+  dySeries("malxts", label = "bedrohlich",color=COL.MALICIOUS) %>%
+  dyOptions(stackedGraph = TRUE) %>%
+  dyRangeSelector(height = 20)
 ```
 
-Gesamtauswertungen
-=====================================
+### Willkommen! {data-width=100}
 
-Row {.tabset .tabset-fade}
------------------------------------------------------------------------
+Willkommen auf webifier Statistics! \n
+Hier finden sie Auswertungen, zu den durch webifier gewonnenen, Daten. \n
+Auf dem Dashboard finden sie einige allgemeine Zahlen und Graphiken zu den ausgewerteten Daten. \n
+Des Weiteren können sie hier graphische Aufbereitungen der Testergebnisse finden. Diese sind unterteilt in Gesamtergebnisse und spezifischen Auswertungen zu den einzelnen Tests.
+
+Gesamtauswertungen {.storyboard}
+=====================================
 
 ### Testergebnisverteilung
 
@@ -223,7 +278,8 @@ valueBox(nrow(result), icon="fa-bar-chart")
 result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'VirusScan'}", "{durationInMillis:1}",skip=0,limit=Inf)
 mean.dur <- mean(result$durationInMillis)/1000
 mean.dur <- round(mean.dur)
-valueBox(paste(mean.dur,'s',sep=""), icon="fa-hourglass-half",color="grey")
+tp <- seconds_to_period(mean.dur)
+valueBox(paste(minute(tp),'min ',second(tp),'s',sep=""), icon="fa-hourglass-half",color="grey")
 ```
 
 Row
@@ -242,21 +298,6 @@ p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("
   layout(title = 'Ergebnisverteilung',
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
-ggplotly(p)
-```
-
-### Verhältnis von Zeit zu Testergebnis
-```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'VirusScan'}", "{durationInMillis:1,result:1}",skip=0,limit=Inf)
-result$durationInMillis <- result$durationInMillis/1000
-result<-result[order(result$result),]
-result[result$result=="UNDEFINED",3]<-0
-result[result$result=="CLEAN",3]<-1
-result[result$result=="SUSPICIOUS",3]<-2
-result[result$result=="MALICIOUS",3]<-3
-result$X_id <- as.numeric(result$X_id)
-p <- plot_ly(data=result,y=result$durationInMillis,x=result$X_id,color=result$result,colors=COL.LIST)  %>%
-  layout(xaxis = list(title="Ergebnis",showticklabels=FALSE,range=list(0,4)), yaxis = list(title="Zeit in Sekunden"))
 ggplotly(p)
 ```
 
@@ -286,7 +327,8 @@ valueBox(nrow(result), icon="fa-bar-chart")
 result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'PortScan'}", "{durationInMillis:1}",skip=0,limit=Inf)
 mean.dur <- mean(result$durationInMillis)/1000
 mean.dur <- round(mean.dur)
-valueBox(paste(mean.dur,'s',sep=""), icon="fa-hourglass-half",color="grey")
+tp <- seconds_to_period(mean.dur)
+valueBox(paste(minute(tp),'min ',second(tp),'s',sep=""), icon="fa-hourglass-half",color="grey")
 ```
 
 Row
@@ -305,21 +347,6 @@ p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("
   layout(title = 'Ergebnisverteilung',
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
-ggplotly(p)
-```
-
-### Verhältnis von Zeit zu Testergebnis
-```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'PortScan'}", "{durationInMillis:1,result:1}",skip=0,limit=Inf)
-result$durationInMillis <- result$durationInMillis/1000
-result<-result[order(result$result),]
-result[result$result=="UNDEFINED",3]<-0
-result[result$result=="CLEAN",3]<-1
-result[result$result=="SUSPICIOUS",3]<-2
-result[result$result=="MALICIOUS",3]<-3
-result$X_id <- as.numeric(result$X_id)
-p <- plot_ly(data=result,y=result$durationInMillis,x=result$X_id,color=result$result,colors=COL.LIST)  %>%
-  layout(xaxis = list(title="Ergebnis",showticklabels=FALSE,range=list(0,4)), yaxis = list(title="Zeit in Sekunden"))
 ggplotly(p)
 ```
 
@@ -349,7 +376,8 @@ valueBox(nrow(result), icon="fa-bar-chart")
 result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'IpScan'}", "{durationInMillis:1}",skip=0,limit=Inf)
 mean.dur <- mean(result$durationInMillis)/1000
 mean.dur <- round(mean.dur)
-valueBox(paste(mean.dur,'s',sep=""), icon="fa-hourglass-half",color="grey")
+tp <- seconds_to_period(mean.dur)
+valueBox(paste(minute(tp),'min ',second(tp),'s',sep=""), icon="fa-hourglass-half",color="grey")
 ```
 
 Row
@@ -368,21 +396,6 @@ p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("
   layout(title = 'Ergebnisverteilung',
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
-ggplotly(p)
-```
-
-### Verhältnis von Zeit zu Testergebnis
-```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'IpScan'}", "{durationInMillis:1,result:1}",skip=0,limit=Inf)
-result$durationInMillis <- result$durationInMillis/1000
-result<-result[order(result$result),]
-result[result$result=="UNDEFINED",3]<-0
-result[result$result=="CLEAN",3]<-1
-result[result$result=="SUSPICIOUS",3]<-2
-result[result$result=="MALICIOUS",3]<-3
-result$X_id <- as.numeric(result$X_id)
-p <- plot_ly(data=result,y=result$durationInMillis,x=result$X_id,color=result$result,colors=COL.LIST)  %>%
-  layout(xaxis = list(title="Ergebnis",showticklabels=FALSE,range=list(0,4)), yaxis = list(title="Zeit in Sekunden"))
 ggplotly(p)
 ```
 
@@ -412,7 +425,8 @@ valueBox(nrow(result), icon="fa-bar-chart")
 result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'PhishingDetector'}", "{durationInMillis:1}",skip=0,limit=Inf)
 mean.dur <- mean(result$durationInMillis)/1000
 mean.dur <- round(mean.dur)
-valueBox(paste(mean.dur,'s',sep=""), icon="fa-hourglass-half",color="grey")
+tp <- seconds_to_period(mean.dur)
+valueBox(paste(minute(tp),'min ',second(tp),'s',sep=""), icon="fa-hourglass-half",color="grey")
 ```
 
 Row
@@ -431,21 +445,6 @@ p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("
   layout(title = 'Ergebnisverteilung',
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
-ggplotly(p)
-```
-
-### Verhältnis von Zeit zu Testergebnis
-```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'PhishingDetector'}", "{durationInMillis:1,result:1}",skip=0,limit=Inf)
-result$durationInMillis <- result$durationInMillis/1000
-result<-result[order(result$result),]
-result[result$result=="UNDEFINED",3]<-0
-result[result$result=="CLEAN",3]<-1
-result[result$result=="SUSPICIOUS",3]<-2
-result[result$result=="MALICIOUS",3]<-3
-result$X_id <- as.numeric(result$X_id)
-p <- plot_ly(data=result,y=result$durationInMillis,x=result$X_id,color=result$result,colors=COL.LIST)  %>%
-  layout(xaxis = list(title="Ergebnis",showticklabels=FALSE,range=list(0,4)), yaxis = list(title="Zeit in Sekunden"))
 ggplotly(p)
 ```
 
@@ -475,7 +474,8 @@ valueBox(nrow(result), icon="fa-bar-chart")
 result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'HeaderInspection'}", "{durationInMillis:1}",skip=0,limit=Inf)
 mean.dur <- mean(result$durationInMillis)/1000
 mean.dur <- round(mean.dur)
-valueBox(paste(mean.dur,'s',sep=""), icon="fa-hourglass-half",color="grey")
+tp <- seconds_to_period(mean.dur)
+valueBox(paste(minute(tp),'min ',second(tp),'s',sep=""), icon="fa-hourglass-half",color="grey")
 ```
 
 Row
@@ -494,21 +494,6 @@ p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("
   layout(title = 'Ergebnisverteilung',
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
-ggplotly(p)
-```
-
-### Verhältnis von Zeit zu Testergebnis
-```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'HeaderInspection'}", "{durationInMillis:1,result:1}",skip=0,limit=Inf)
-result$durationInMillis <- result$durationInMillis/1000
-result<-result[order(result$result),]
-result[result$result=="UNDEFINED",3]<-0
-result[result$result=="CLEAN",3]<-1
-result[result$result=="SUSPICIOUS",3]<-2
-result[result$result=="MALICIOUS",3]<-3
-result$X_id <- as.numeric(result$X_id)
-p <- plot_ly(data=result,y=result$durationInMillis,x=result$X_id,color=result$result,colors=COL.LIST)  %>%
-  layout(xaxis = list(title="Ergebnis",showticklabels=FALSE,range=list(0,4)), yaxis = list(title="Zeit in Sekunden"))
 ggplotly(p)
 ```
 
@@ -538,7 +523,8 @@ valueBox(nrow(result), icon="fa-bar-chart")
 result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'LinkChecker'}", "{durationInMillis:1}",skip=0,limit=Inf)
 mean.dur <- mean(result$durationInMillis)/1000
 mean.dur <- round(mean.dur)
-valueBox(paste(mean.dur,'s',sep=""), icon="fa-hourglass-half",color="grey")
+tp <- seconds_to_period(mean.dur)
+valueBox(paste(minute(tp),'min ',second(tp),'s',sep=""), icon="fa-hourglass-half",color="grey")
 ```
 
 Row
@@ -557,21 +543,6 @@ p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("
   layout(title = 'Ergebnisverteilung',
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
-ggplotly(p)
-```
-
-### Verhältnis von Zeit zu Testergebnis
-```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'LinkChecker'}", "{durationInMillis:1,result:1}",skip=0,limit=Inf)
-result$durationInMillis <- result$durationInMillis/1000
-result<-result[order(result$result),]
-result[result$result=="UNDEFINED",3]<-0
-result[result$result=="CLEAN",3]<-1
-result[result$result=="SUSPICIOUS",3]<-2
-result[result$result=="MALICIOUS",3]<-3
-result$X_id <- as.numeric(result$X_id)
-p <- plot_ly(data=result,y=result$durationInMillis,x=result$X_id,color=result$result,colors=COL.LIST)  %>%
-  layout(xaxis = list(title="Ergebnis",showticklabels=FALSE,range=list(0,4)), yaxis = list(title="Zeit in Sekunden"))
 ggplotly(p)
 ```
 
@@ -601,7 +572,8 @@ valueBox(nrow(result), icon="fa-bar-chart")
 result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'GoogleSafeBrowsing'}", "{durationInMillis:1}",skip=0,limit=Inf)
 mean.dur <- mean(result$durationInMillis)/1000
 mean.dur <- round(mean.dur)
-valueBox(paste(mean.dur,'s',sep=""), icon="fa-hourglass-half",color="grey")
+tp <- seconds_to_period(mean.dur)
+valueBox(paste(minute(tp),'min ',second(tp),'s',sep=""), icon="fa-hourglass-half",color="grey")
 ```
 
 Row
@@ -620,21 +592,6 @@ p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("
   layout(title = 'Ergebnisverteilung',
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
-ggplotly(p)
-```
-
-### Verhältnis von Zeit zu Testergebnis
-```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'GoogleSafeBrowsing'}", "{durationInMillis:1,result:1}",skip=0,limit=Inf)
-result$durationInMillis <- result$durationInMillis/1000
-result<-result[order(result$result),]
-result[result$result=="UNDEFINED",3]<-0
-result[result$result=="CLEAN",3]<-1
-result[result$result=="SUSPICIOUS",3]<-2
-result[result$result=="MALICIOUS",3]<-3
-result$X_id <- as.numeric(result$X_id)
-p <- plot_ly(data=result,y=result$durationInMillis,x=result$X_id,color=result$result,colors=COL.LIST)  %>%
-  layout(xaxis = list(title="Ergebnis",showticklabels=FALSE,range=list(0,4)), yaxis = list(title="Zeit in Sekunden"))
 ggplotly(p)
 ```
 
@@ -664,7 +621,8 @@ valueBox(nrow(result), icon="fa-bar-chart")
 result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'CertificateChecker'}", "{durationInMillis:1}",skip=0,limit=Inf)
 mean.dur <- mean(result$durationInMillis)/1000
 mean.dur <- round(mean.dur)
-valueBox(paste(mean.dur,'s',sep=""), icon="fa-hourglass-half",color="grey")
+tp <- seconds_to_period(mean.dur)
+valueBox(paste(minute(tp),'min ',second(tp),'s',sep=""), icon="fa-hourglass-half",color="grey")
 ```
 
 Row
@@ -686,21 +644,6 @@ p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("
 ggplotly(p)
 ```
 
-### Verhältnis von Zeit zu Testergebnis
-```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'CertificateChecker'}", "{durationInMillis:1,result:1}",skip=0,limit=Inf)
-result$durationInMillis <- result$durationInMillis/1000
-result<-result[order(result$result),]
-result[result$result=="UNDEFINED",3]<-0
-result[result$result=="CLEAN",3]<-1
-result[result$result=="SUSPICIOUS",3]<-2
-result[result$result=="MALICIOUS",3]<-3
-result$X_id <- as.numeric(result$X_id)
-p <- plot_ly(data=result,y=result$durationInMillis,x=result$X_id,color=result$result,colors=COL.LIST)  %>%
-  layout(xaxis = list(title="Ergebnis",showticklabels=FALSE,range=list(0,4)), yaxis = list(title="Zeit in Sekunden"))
-ggplotly(p)
-```
-
 Die Top 100 der bedrohlichsten Webseiten
 =====================================
 ```{r}
@@ -709,7 +652,7 @@ result <- result[order(result$overallResultValue,decreasing = TRUE),]
 result <- head(result,100)
 result$overallResultValue <- 1:nrow(result)
 names(result) <- c('host','Rang')
-datatable(result[,c(2,1)], options = list(pageLength = 10))
+datatable(result[,c(2,1)], options = list(pageLength = 10), rownames=FALSE)
 ```
 
 Ergebnisse durchsuchen
@@ -726,7 +669,11 @@ names(result) <- c('Datum','Domain','Ergebnis')
 locale <- Sys.setlocale("LC_TIME", "en_US.UTF-8")
 format <- "%a %b %d %H:%M:%S CEST %Y"
 result[,1] <- format(as.Date(as.POSIXct(result[,1],format, tz="CET")),"%d-%m-%Y")
-datatable(result, options = list(pageLength = 100))
+result[result$Ergebnis=="MALICIOUS",3] <- "bedrohlich"
+result[result$Ergebnis=="CLEAN",3] <- "sauber"
+result[result$Ergebnis=="SUSPICIOUS",3] <- "verdächtig"
+result[result$Ergebnis=="UNDEFINED",3] <- "unbekannt"
+#datatable(result, options = list(pageLength = 100), rownames=FALSE)
 ```
-
+Coming soon...
 
