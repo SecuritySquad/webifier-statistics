@@ -307,7 +307,7 @@ result[result$result=='MALICIOUS',1] <- "bedrohlich"
 result[result$result=='SUSPICIOUS',1] <- "verdächtig"
 result[result$result=='UNDEFINED',1] <- "unbekannt"
 result[result$result=='CLEAN',1] <- "sauber"
-p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("red","darkgreen","grey","orange")) %>%
+p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',marker = list(colors=COL.LIST)) %>%
   layout(title = 'Ergebnisverteilung',
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
@@ -356,7 +356,7 @@ result[result$result=='MALICIOUS',1] <- "bedrohlich"
 result[result$result=='SUSPICIOUS',1] <- "verdächtig"
 result[result$result=='UNDEFINED',1] <- "unbekannt"
 result[result$result=='CLEAN',1] <- "sauber"
-p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("red","darkgreen","grey","orange")) %>%
+p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',marker = list(colors=COL.LIST)) %>%
   layout(title = 'Ergebnisverteilung',
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
@@ -413,7 +413,7 @@ result[result$result=='MALICIOUS',1] <- "bedrohlich"
 result[result$result=='SUSPICIOUS',1] <- "verdächtig"
 result[result$result=='UNDEFINED',1] <- "unbekannt"
 result[result$result=='CLEAN',1] <- "sauber"
-p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("red","darkgreen","grey","orange")) %>%
+p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',marker = list(colors=COL.LIST)) %>%
   layout(title = 'Ergebnisverteilung',
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
@@ -462,7 +462,7 @@ result[result$result=='MALICIOUS',1] <- "bedrohlich"
 result[result$result=='SUSPICIOUS',1] <- "verdächtig"
 result[result$result=='UNDEFINED',1] <- "unbekannt"
 result[result$result=='CLEAN',1] <- "sauber"
-p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("red","darkgreen","grey","orange")) %>%
+p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',marker = list(colors=COL.LIST)) %>%
   layout(title = 'Ergebnisverteilung',
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
@@ -511,7 +511,7 @@ result[result$result=='MALICIOUS',1] <- "bedrohlich"
 result[result$result=='SUSPICIOUS',1] <- "verdächtig"
 result[result$result=='UNDEFINED',1] <- "unbekannt"
 result[result$result=='CLEAN',1] <- "sauber"
-p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("red","darkgreen","grey","orange")) %>%
+p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',marker = list(colors=COL.LIST)) %>%
   layout(title = 'Ergebnisverteilung',
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
@@ -560,7 +560,7 @@ result[result$result=='MALICIOUS',1] <- "bedrohlich"
 result[result$result=='SUSPICIOUS',1] <- "verdächtig"
 result[result$result=='UNDEFINED',1] <- "unbekannt"
 result[result$result=='CLEAN',1] <- "sauber"
-p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("red","darkgreen","grey","orange")) %>%
+p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',marker = list(colors=COL.LIST)) %>%
   layout(title = 'Ergebnisverteilung',
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
@@ -609,7 +609,7 @@ result[result$result=='MALICIOUS',1] <- "bedrohlich"
 result[result$result=='SUSPICIOUS',1] <- "verdächtig"
 result[result$result=='UNDEFINED',1] <- "unbekannt"
 result[result$result=='CLEAN',1] <- "sauber"
-p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("red","darkgreen","grey","orange")) %>%
+p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',marker = list(colors=COL.LIST)) %>%
   layout(title = 'Ergebnisverteilung',
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
@@ -658,7 +658,7 @@ result[result$result=='MALICIOUS',1] <- "bedrohlich"
 result[result$result=='SUSPICIOUS',1] <- "verdächtig"
 result[result$result=='UNDEFINED',1] <- "unbekannt"
 result[result$result=='CLEAN',1] <- "sauber"
-p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("red","darkgreen","grey","orange")) %>%
+p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',marker = list(colors=COL.LIST)) %>%
   layout(title = 'Ergebnisverteilung',
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
