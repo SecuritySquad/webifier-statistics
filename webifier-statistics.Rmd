@@ -665,10 +665,11 @@ p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',colors=c("
 ggplotly(p)
 ```
 
-Die Top 100 der bedrohlichsten Webseiten
+Die bedrohlichsten Webseiten
 =====================================
 ```{r}
 result <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{overallResultType:'MALICIOUS'}", '{host:1,overallResultValue:1}',skip=0,limit=Inf)
+result <- aggregate(as.numeric(overallResultValue) ~ host,result,mean)
 result <- result[order(result$overallResultValue,decreasing = TRUE),]
 result <- head(result,100)
 result$overallResultValue <- 1:nrow(result)
