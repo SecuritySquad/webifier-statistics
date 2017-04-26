@@ -213,29 +213,29 @@ ggplotly(p)
 ```{r}
 result <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{}", "{host:1,overallResultType:1}",skip=0,limit=Inf)
 result[,1] <- tld_extract(result[,1],NULL)[,2]
-result <- result[result[,2]!="CLEAN",]
+result <- result[result[,2]!="UNDEFINED",]
+result[result$overallResultType=='CLEAN',2] <- "sauber"
 result[result$overallResultType=='MALICIOUS',2] <- "bedrohlich"
 result[result$overallResultType=='SUSPICIOUS',2] <- "verdächtig"
-result[result$overallResultType=='UNDEFINED',2] <- "unbekannt"
 names(result) <- c('TLD','Ergebnis','Anzahl')
 result.size <- aggregate(Anzahl ~ TLD,result, length)
 names(result.size) <- c('TLD','MaxAnzahl')
 result <- aggregate(Anzahl ~ TLD+Ergebnis,result,length)
 result <- merge(result.size,result)
 result$Anzahl <- round((result$Anzahl/result$MaxAnzahl)*100)
-fin.result <- as.data.frame(cbind(levels(factor(result$TLD))))
+fin.result <- as.data.frame(cbind(levels(factor(result$TLD))), stringsAsFactors = FALSE)
 names(fin.result)[1] <- 'TLD'
 fin.result <- merge(fin.result,result[result$Ergebnis=='bedrohlich',c(-2,-3)],by="TLD",all=TRUE)
 fin.result <- merge(fin.result,result[result$Ergebnis=='verdächtig',c(-2,-3)],by="TLD",all=TRUE)
-fin.result <- merge(fin.result,result[result$Ergebnis=='unbekannt',c(-2,-3)],by="TLD",all=TRUE)
-names(fin.result) <- c('TLD','bedrohlich','verdächtig','unbekannt')
+fin.result <- merge(fin.result,result[result$Ergebnis=='sauber',c(-2,-3)],by="TLD",all=TRUE)
+names(fin.result) <- c('TLD','bedrohlich','verdächtig','sauber')
 fin.result[is.na(fin.result$bedrohlich),2] <- 0
 fin.result[is.na(fin.result$verdächtig),3] <- 0
-fin.result[is.na(fin.result$unbekannt),4] <- 0
-
+fin.result[is.na(fin.result$sauber),4] <- 0
+fin.result$TLD <- factor(fin.result$TLD, levels = unique(fin.result$TLD)[order(fin.result$bedrohlich, decreasing = TRUE)])
 p <- plot_ly(fin.result, x = ~TLD, y = ~bedrohlich, type = 'bar', name = 'bedrohlich', marker = list(color=COL.MALICIOUS)) %>%
   add_trace(y = ~verdächtig, name = 'verdächtig', marker = list(color=COL.SUSPICIOUS)) %>%
-  add_trace(y = ~unbekannt, name = 'unbekannt', marker = list(color=COL.UNDEFINED)) %>%
+  add_trace(y = ~sauber, name = 'sauber', marker = list(color=COL.CLEAN)) %>%
   layout(yaxis = list(title = 'Prozent'), barmode = 'stack',title="Prozentuale Erkennungen anhand Top-Level-Domains")
 ggplotly(p)
 
