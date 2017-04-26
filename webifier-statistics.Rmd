@@ -233,7 +233,7 @@ names(fin.result) <- c('TLD','bedrohlich','verdächtig','sauber','order')
 fin.result[is.na(fin.result$bedrohlich),2] <- 0
 fin.result[is.na(fin.result$verdächtig),3] <- 0
 fin.result[is.na(fin.result$sauber),4] <- 0
-fin.result$order <- fin.result$bedrohlich+0.1*fin.result$verdächtig
+fin.result$order <- fin.result$bedrohlich+0.01*fin.result$verdächtig
 fin.result$sauber <- 100-fin.result$bedrohlich-fin.result$verdächtig
 fin.result$TLD <- factor(fin.result$TLD, levels = unique(fin.result$TLD)[order(fin.result$order, decreasing = TRUE)])
 p <- plot_ly(fin.result, x = ~TLD, y = ~bedrohlich, type = 'bar', name = 'bedrohlich', marker = list(color=COL.MALICIOUS)) %>%
