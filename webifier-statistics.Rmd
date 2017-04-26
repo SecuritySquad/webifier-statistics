@@ -199,7 +199,7 @@ result[result$overallResultType=='SUSPICIOUS',2] <- "verdächtig"
 result[result$overallResultType=='UNDEFINED',2] <- "unbekannt"
 names(result) <- c('TLD','Ergebnis','id')
 result.size <- aggregate(id ~ TLD,result, length)
-result <- result[result$TLD==result.size[result.size$id>200,]$TLD,]
+result <- result[result$TLD==result.size[result.size$id>50,]$TLD,]
 p <- ggplot(data = result, aes(x = TLD, fill = Ergebnis),col="Anzahl") +
             geom_bar(position = "dodge") +
             ylab("Anzahl") + 
