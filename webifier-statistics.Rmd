@@ -228,11 +228,14 @@ names(fin.result)[1] <- 'TLD'
 fin.result <- merge(fin.result,result[result$Ergebnis=='bedrohlich',c(-2,-3)],by="TLD",all=TRUE)
 fin.result <- merge(fin.result,result[result$Ergebnis=='verdächtig',c(-2,-3)],by="TLD",all=TRUE)
 fin.result <- merge(fin.result,result[result$Ergebnis=='sauber',c(-2,-3)],by="TLD",all=TRUE)
-names(fin.result) <- c('TLD','bedrohlich','verdächtig','sauber')
+fin.result <- merge(fin.result,result[result$Ergebnis=='sauber',c(-2,-3)],by="TLD",all=TRUE)
+names(fin.result) <- c('TLD','bedrohlich','verdächtig','sauber','order')
 fin.result[is.na(fin.result$bedrohlich),2] <- 0
 fin.result[is.na(fin.result$verdächtig),3] <- 0
 fin.result[is.na(fin.result$sauber),4] <- 0
-fin.result$TLD <- factor(fin.result$TLD, levels = unique(fin.result$TLD)[order(fin.result$bedrohlich, decreasing = TRUE)])
+fin.result$order <- fin.result$bedrohlich+0.1*fin.result$verdächtig
+fin.result$sauber <- 100-fin.result$bedrohlich-fin.result$verdächtig
+fin.result$TLD <- factor(fin.result$TLD, levels = unique(fin.result$TLD)[order(fin.result$order, decreasing = TRUE)])
 p <- plot_ly(fin.result, x = ~TLD, y = ~bedrohlich, type = 'bar', name = 'bedrohlich', marker = list(color=COL.MALICIOUS)) %>%
   add_trace(y = ~verdächtig, name = 'verdächtig', marker = list(color=COL.SUSPICIOUS)) %>%
   add_trace(y = ~sauber, name = 'sauber', marker = list(color=COL.CLEAN)) %>%
