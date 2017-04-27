@@ -378,10 +378,11 @@ for(i in 1:nrow(result)){
 }
 ports.df <- data.frame(port=ports,count=0)
 ports.df <- aggregate(count ~ ports,ports.df, length)
-p <- plot_ly(ports.df, x = ~ports, y = ~count, type = "bar",color = I("red")) %>%
+ports.df$ports <- as.character(ports.df$ports)
+p <- plot_ly(ports.df, labels = ~ports, values = ~count, type = "pie") %>%
   layout(title = "Am häufigsten von bedrohlichen Seiten abgefragte Ports",
-         xaxis = list(title = ""),
-         yaxis = list(title = ""))
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 ggplotly(p)
 ```
 
