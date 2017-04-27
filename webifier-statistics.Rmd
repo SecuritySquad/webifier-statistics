@@ -36,6 +36,8 @@ usePackage('DT')
 usePackage('dygraphs')
 usePackage('xts')
 usePackage('lubridate')
+usePackage('countrycode')
+library('countrycode')
 library('lubridate')
 library('flexdashboard')
 library('urltools')
@@ -328,6 +330,45 @@ p <- plot_ly(result, labels = ~TLD, values = ~Anzahl, type = 'pie') %>%
 ggplotly(p)
 ```
 
+### Bedrohliche Funde visualisiert anhand einer Weltkarte
+
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{}", "{host:1,overallResultValue:1,overallResultType:1}",skip=0,limit=Inf)
+result <- result[result$overallResultType!='CLEAN',]
+result <- result[result$overallResultType!='UNDEFINED',]
+result[,1] <- tld_extract(result[,1],NULL)[,2]
+result[,3] <- countrycode(result$host,"iso2c","country.name.de")
+result[,4] <- countrycode(result$host,"iso2c","iso3c")
+result <- result[!is.na(result[,4]),]
+names(result) <- c('iso2c','val','country','iso3c')
+result$val <- as.numeric(result$val)
+result <- aggregate(val ~ country + iso3c,result,sum)
+
+# light grey boundaries
+l <- list(color = toRGB("grey"), width = 0.5)
+
+# specify map projection/options
+g <- list(
+  showframe = TRUE,
+  showcoastlines = TRUE,
+  projection = list(type = 'Mercator')
+)
+
+p <- plot_geo(result) %>%
+  add_trace(
+    z = ~val, color = ~val, colors = c(COL.CLEAN,COL.SUSPICIOUS,COL.MALICIOUS),
+    text = ~country, locations = ~iso3c, marker = list(line = l)
+  ) %>%
+  colorbar(title = 'Risikofaktor', tickprefix = '') %>%
+  layout(
+    title = 'Bedrohliche Funde anhand der Länder',
+    geo = g
+  )
+
+ggplotly(p)
+
+```
+
 VirusScan {data-navmenu="Einzelauswertungen"}
 =====================================
 
@@ -559,6 +600,12 @@ p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',marker = l
 ggplotly(p)
 ```
 
+###Some Auswertung stuff
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'PhishingDetector'}", '{resultInfo:1,result:1}',skip=0,limit=Inf)
+test <- result[1,1]
+```
+
 HeaderInspection {data-navmenu="Einzelauswertungen"}
 =====================================
 
@@ -606,6 +653,12 @@ p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',marker = l
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 ggplotly(p)
+```
+
+###Some Auswertung stuff
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'HeaderInspection'}", '{resultInfo:1,result:1}',skip=0,limit=Inf)
+test <- result[1,1]
 ```
 
 LinkChecker {data-navmenu="Einzelauswertungen"}
@@ -657,6 +710,13 @@ p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',marker = l
 ggplotly(p)
 ```
 
+###Some Auswertung stuff
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'LinkChecker'}", '{resultInfo:1,result:1}',skip=0,limit=Inf)
+test <- result[1,1]
+```
+
+
 GoogleSafeBrowsing {data-navmenu="Einzelauswertungen"}
 =====================================
 
@@ -706,6 +766,13 @@ p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',marker = l
 ggplotly(p)
 ```
 
+###Some Auswertung stuff
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'GoogleSafeBrowsing'}", '{resultInfo:1,result:1}',skip=0,limit=Inf)
+test <- result[1,1]
+```
+
+
 CertificateChecker {data-navmenu="Einzelauswertungen"}
 =====================================
 
@@ -754,6 +821,13 @@ p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',marker = l
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 ggplotly(p)
 ```
+
+###Some Auswertung stuff
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'CertificateChecker'}", '{resultInfo:1,result:1}',skip=0,limit=Inf)
+test <- result[1,1]
+```
+
 
 Die bedrohlichsten Webseiten
 =====================================
