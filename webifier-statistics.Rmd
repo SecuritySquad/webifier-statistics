@@ -170,7 +170,7 @@ Des Weiteren können Sie hier graphische Aufbereitungen der Testergebnisse finde
 Row
 -----------------------------------------------------------------------
 
-### täglich analysierte Webseiten
+### analysierte Webseiten pro Tag
 ```{r}
 result <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{}", "{datetime:1,overallResultType:1}",skip=0,limit=Inf)
 names(result) <- c('Datum','Ergebnis','Anzahl')
@@ -184,7 +184,7 @@ mean.res <- round(mean(result$Anzahl))
 valueBox(mean.res, icon="fa-bar-chart",color="primary")
 ```
 
-### täglich gefundene unbedenkliche Webseiten
+### unbedenkliche Webseiten pro Tag
 ```{r}
 result <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{overallResultType:'CLEAN'}", "{datetime:1,overallResultType:1}",skip=0,limit=Inf)
 names(result) <- c('Datum','Ergebnis','Anzahl')
@@ -198,7 +198,7 @@ mean.res <- round(mean(result$Anzahl))
 valueBox(mean.res, icon="fa-bar-chart",color=COL.CLEAN)
 ```
 
-### täglich gefundene verdächtige Webseiten
+### verdächtige Webseiten pro Tag
 ```{r}
 result <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{overallResultType:'SUSPICIOUS'}", "{datetime:1,overallResultType:1}",skip=0,limit=Inf)
 names(result) <- c('Datum','Ergebnis','Anzahl')
@@ -212,7 +212,7 @@ mean.res <- round(mean(result$Anzahl))
 valueBox(mean.res, icon="fa-bar-chart",color=COL.SUSPICIOUS)
 ```
 
-### täglich gefundene bedrohliche Webseiten
+### bedrohliche Webseiten pro Tag
 ```{r}
 result <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{overallResultType:'MALICIOUS'}", "{datetime:1,overallResultType:1}",skip=0,limit=Inf)
 names(result) <- c('Datum','Ergebnis','Anzahl')
@@ -452,8 +452,8 @@ ports.df$ports <- as.character(ports.df$ports)
 ports.df <- ports.df[ports.df$ports!="53",]
 ports.df <- ports.df[ports.df$ports!="8080",]
 ports.df <- ports.df[ports.df$ports!="8443",]
-#ports.df[ports.df$count<200,1] <- 'Andere'
-#ports.df <- aggregate(count ~ ports,ports.df, sum)
+ports.df[ports.df$count<200,1] <- 'Andere'
+ports.df <- aggregate(count ~ ports,ports.df, sum)
 p <- plot_ly(ports.df, labels = ~ports, values = ~count, type = "pie") %>%
   layout(title = "Am häufigsten von bedrohlichen Seiten abgefragte Ports",
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
