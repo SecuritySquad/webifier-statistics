@@ -170,7 +170,67 @@ Des Weiteren können Sie hier graphische Aufbereitungen der Testergebnisse finde
 Row
 -----------------------------------------------------------------------
 
-Hier kommen noch mehr Benchmarks
+### Durchschnittlich pro Tag analysierte Webseiten
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{}", "{datetime:1,overallResultType:1}",skip=0,limit=Inf)
+names(result) <- c('Datum','Ergebnis','Anzahl')
+locale <- Sys.setlocale("LC_TIME", "en_US.UTF-8")
+format <- "%a %b %d %H:%M:%S CEST %Y"
+result[,1] <- format(as.Date(as.POSIXct(result[,1],format, tz="CET")),"%d-%m-%Y")
+result <- result[!is.na(result$Datum),]
+result <- result[order(result$Datum),]
+result <- aggregate(Anzahl ~ Datum, result, length)
+mean.res <- mean(result$Anzahl)
+valueBox(mean.res, icon="fa-bar-chart",color="primary")
+```
+
+### Durchschnittlich pro Tag saubere Webseiten
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{overallResultType:'CLEAN'}", "{datetime:1,overallResultType:1}",skip=0,limit=Inf)
+names(result) <- c('Datum','Ergebnis','Anzahl')
+locale <- Sys.setlocale("LC_TIME", "en_US.UTF-8")
+format <- "%a %b %d %H:%M:%S CEST %Y"
+result[,1] <- format(as.Date(as.POSIXct(result[,1],format, tz="CET")),"%d-%m-%Y")
+result <- result[!is.na(result$Datum),]
+result <- result[order(result$Datum),]
+result <- aggregate(Anzahl ~ Datum, result, length)
+mean.res <- mean(result$Anzahl)
+gauge(mean.res, min = 0, max = base, label = paste(round((mean.res/base)*100),"%",sep=""), gaugeSectors(
+  success = c(0, base), warning = c(-10, -5), danger = c(-4, -1)
+))
+```
+
+### Durchschnittlich pro Tag verdächtige Webseiten
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{overallResultType:'SUSPICIOUS'}", "{datetime:1,overallResultType:1}",skip=0,limit=Inf)
+names(result) <- c('Datum','Ergebnis','Anzahl')
+locale <- Sys.setlocale("LC_TIME", "en_US.UTF-8")
+format <- "%a %b %d %H:%M:%S CEST %Y"
+result[,1] <- format(as.Date(as.POSIXct(result[,1],format, tz="CET")),"%d-%m-%Y")
+result <- result[!is.na(result$Datum),]
+result <- result[order(result$Datum),]
+result <- aggregate(Anzahl ~ Datum, result, length)
+mean.res <- mean(result$Anzahl)
+gauge(mean.res, min = 0, max = base, label = paste(round((mean.res/base)*100),"%",sep=""), gaugeSectors(
+  success = c(-10, -5), warning = c(0, base), danger = c(-4, -1)
+))
+```
+
+### Durchschnittlich pro Tag bedrohliche Webseiten
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{overallResultType:'MALICIOUS'}", "{datetime:1,overallResultType:1}",skip=0,limit=Inf)
+names(result) <- c('Datum','Ergebnis','Anzahl')
+locale <- Sys.setlocale("LC_TIME", "en_US.UTF-8")
+format <- "%a %b %d %H:%M:%S CEST %Y"
+result[,1] <- format(as.Date(as.POSIXct(result[,1],format, tz="CET")),"%d-%m-%Y")
+result <- result[!is.na(result$Datum),]
+result <- result[order(result$Datum),]
+result <- aggregate(Anzahl ~ Datum, result, length)
+mean.res <- mean(result$Anzahl)
+gauge(mean.res, min = 0, max = base, label = paste(round((mean.res/base)*100),"%",sep=""), gaugeSectors(
+  success = c(-4, -1), warning = c(-10, -5), danger = c(0, base)
+))
+```
 
 Gesamtauswertungen {.storyboard}
 =====================================
@@ -332,12 +392,6 @@ ggplotly(p)
 ```{r}
 #TODO
 result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'PortScan'}", '{resultInfo:1, result:1}',skip=0,limit=Inf)
-result <- result[result$result!='CLEAN',]
-result <- result[result$result!='UNDEFINED',]
-ports <- c()
-for(i in 1:nrow(result)){
-  ports <- c(ports,fromJSON(result[i,1])$unknownPorts)
-}
 ```
 
 PortScan {data-navmenu="Einzelauswertungen"}
@@ -402,6 +456,8 @@ ports.df <- data.frame(port=ports,count=0)
 ports.df <- aggregate(count ~ ports,ports.df, length)
 ports.df$ports <- as.character(ports.df$ports)
 ports.df <- ports.df[ports.df$ports!="53",]
+ports.df <- ports.df[ports.df$ports!="8080",]
+ports.df <- ports.df[ports.df$ports!="8443",]
 ports.df[ports.df$count<200,1] <- 'Andere'
 ports.df <- aggregate(count ~ ports,ports.df, sum)
 p <- plot_ly(ports.df, labels = ~ports, values = ~count, type = "pie") %>%
