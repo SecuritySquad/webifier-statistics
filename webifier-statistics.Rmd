@@ -718,25 +718,3 @@ names(result) <- c('host','Rang')
 datatable(result[,c(2,1)], options = list(pageLength = 10), rownames=FALSE)
 ```
 
-Ergebnisse durchsuchen
-=====================================
-
-Row
------------------------------------------------------------------------
-### alle Testergebnisse
-
-```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{}", "{datetime:1,host:1,overallResultType:1}",skip=0,limit=Inf)
-result <- result[,-4]
-names(result) <- c('Datum','Domain','Ergebnis')
-locale <- Sys.setlocale("LC_TIME", "en_US.UTF-8")
-format <- "%a %b %d %H:%M:%S CEST %Y"
-result[,1] <- format(as.Date(as.POSIXct(result[,1],format, tz="CET")),"%d-%m-%Y")
-result[result$Ergebnis=="MALICIOUS",3] <- "bedrohlich"
-result[result$Ergebnis=="CLEAN",3] <- "sauber"
-result[result$Ergebnis=="SUSPICIOUS",3] <- "verdächtig"
-result[result$Ergebnis=="UNDEFINED",3] <- "unbekannt"
-#datatable(result, options = list(pageLength = 100), rownames=FALSE)
-```
-Coming soon...
-
