@@ -372,7 +372,17 @@ ggplotly(p)
 result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'PortScan'}", '{resultInfo:1, result:1}',skip=0,limit=Inf)
 result <- result[result$result!='CLEAN',]
 result <- result[result$result!='UNDEFINED',]
-
+ports <- c()
+for(i in 1:nrow(result)){
+  ports <- c(ports,fromJSON(result[i,1])$unknownPorts)
+}
+ports.df <- data.frame(port=ports,count=0)
+ports.df <- aggregate(count ~ ports,ports.df, length)
+p <- plot_ly(ports.df, x = ~ports, y = ~count, type = "bar",color = I("red")) %>%
+  layout(title = "Am häufigsten von bedrohlichen Seiten abgefragte Ports",
+         xaxis = list(title = ""),
+         yaxis = list(title = ""))
+ggplotly(p)
 ```
 
 IPScan {data-navmenu="Einzelauswertungen"}
