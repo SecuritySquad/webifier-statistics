@@ -425,8 +425,6 @@ ggplotly(p)
 
 ### Some Analysis
 ```{r}
-#TODO
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'PortScan'}", '{resultInfo:1, result:1}',skip=0,limit=Inf)
 ```
 
 PortScan {data-navmenu="Einzelauswertungen"}
@@ -602,8 +600,6 @@ ggplotly(p)
 
 ###Some Auswertung stuff
 ```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'PhishingDetector'}", '{resultInfo:1,result:1}',skip=0,limit=Inf)
-test <- result[1,1]
 ```
 
 HeaderInspection {data-navmenu="Einzelauswertungen"}
@@ -657,8 +653,6 @@ ggplotly(p)
 
 ###Some Auswertung stuff
 ```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'HeaderInspection'}", '{resultInfo:1,result:1}',skip=0,limit=Inf)
-test <- result[1,1]
 ```
 
 LinkChecker {data-navmenu="Einzelauswertungen"}
@@ -712,8 +706,6 @@ ggplotly(p)
 
 ###Some Auswertung stuff
 ```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'LinkChecker'}", '{resultInfo:1,result:1}',skip=0,limit=Inf)
-test <- result[1,1]
 ```
 
 
@@ -768,8 +760,6 @@ ggplotly(p)
 
 ###Some Auswertung stuff
 ```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'GoogleSafeBrowsing'}", '{resultInfo:1,result:1}',skip=0,limit=Inf)
-test <- result[1,1]
 ```
 
 
@@ -824,8 +814,6 @@ ggplotly(p)
 
 ###Some Auswertung stuff
 ```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'CertificateChecker'}", '{resultInfo:1,result:1}',skip=0,limit=Inf)
-test <- result[1,1]
 ```
 
 
