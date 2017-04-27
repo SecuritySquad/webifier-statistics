@@ -167,6 +167,11 @@ Hier finden Sie Auswertungen, zu den durch webifier gewonnenen, Daten. \n
 Auf dem Dashboard werden einige allgemeine Zahlen und Graphiken zu den ausgewerteten Daten präsentiert. \n
 Des Weiteren können Sie hier graphische Aufbereitungen der Testergebnisse finden. Diese sind unterteilt in Gesamtergebnisse und spezifischen Auswertungen zu den einzelnen Tests.
 
+Row
+-----------------------------------------------------------------------
+
+Hier kommen noch mehr Benchmarks
+
 Gesamtauswertungen {.storyboard}
 =====================================
 
@@ -299,6 +304,12 @@ tp <- seconds_to_period(mean.dur)
 valueBox(paste(minute(tp),'min ',second(tp),'s',sep=""), icon="fa-hourglass-half",color="grey")
 ```
 
+### Gefundene Viren
+```{r}
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'VirusScan'}", '{resultInfo:1, result:1}',skip=0,limit=Inf)
+#TODO
+```
+
 Row
 -----------------------------------------------------------------------
 
@@ -316,6 +327,18 @@ p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',marker = l
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 ggplotly(p)
+```
+
+### Some Analysis
+```{r}
+#TODO
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'PortScan'}", '{resultInfo:1, result:1}',skip=0,limit=Inf)
+result <- result[result$result!='CLEAN',]
+result <- result[result$result!='UNDEFINED',]
+ports <- c()
+for(i in 1:nrow(result)){
+  ports <- c(ports,fromJSON(result[i,1])$unknownPorts)
+}
 ```
 
 PortScan {data-navmenu="Einzelauswertungen"}
@@ -690,7 +713,7 @@ result <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{overallResultType:'M
 result <- aggregate(as.numeric(overallResultValue) ~ host,result,mean)
 names(result) <- c("host","overallResultValue")
 result <- result[order(result$overallResultValue,decreasing = TRUE),]
-result <- head(result,100)
+result <- head(result,10)
 result$overallResultValue <- 1:nrow(result)
 names(result) <- c('host','Rang')
 datatable(result[,c(2,1)], options = list(pageLength = 10), rownames=FALSE)
