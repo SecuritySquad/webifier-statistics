@@ -194,10 +194,8 @@ result[,1] <- format(as.Date(as.POSIXct(result[,1],format, tz="CET")),"%d-%m-%Y"
 result <- result[!is.na(result$Datum),]
 result <- result[order(result$Datum),]
 result <- aggregate(Anzahl ~ Datum, result, length)
-mean.res <- mean(result$Anzahl)
-gauge(mean.res, min = 0, max = base, label = paste(round((mean.res/base)*100),"%",sep=""), gaugeSectors(
-  success = c(0, base), warning = c(-10, -5), danger = c(-4, -1)
-))
+mean.res <- round(mean(result$Anzahl))
+valueBox(mean.res, icon="fa-bar-chart",color=COL.CLEAN)
 ```
 
 ### Durchschnittlich pro Tag verdächtige Webseiten
@@ -210,10 +208,8 @@ result[,1] <- format(as.Date(as.POSIXct(result[,1],format, tz="CET")),"%d-%m-%Y"
 result <- result[!is.na(result$Datum),]
 result <- result[order(result$Datum),]
 result <- aggregate(Anzahl ~ Datum, result, length)
-mean.res <- mean(result$Anzahl)
-gauge(mean.res, min = 0, max = base, label = paste(round((mean.res/base)*100),"%",sep=""), gaugeSectors(
-  success = c(-10, -5), warning = c(0, base), danger = c(-4, -1)
-))
+mean.res <- round(mean(result$Anzahl))
+valueBox(mean.res, icon="fa-bar-chart",color=COL.SUSPICIOUS)
 ```
 
 ### Durchschnittlich pro Tag bedrohliche Webseiten
@@ -226,10 +222,8 @@ result[,1] <- format(as.Date(as.POSIXct(result[,1],format, tz="CET")),"%d-%m-%Y"
 result <- result[!is.na(result$Datum),]
 result <- result[order(result$Datum),]
 result <- aggregate(Anzahl ~ Datum, result, length)
-mean.res <- mean(result$Anzahl)
-gauge(mean.res, min = 0, max = base, label = paste(round((mean.res/base)*100),"%",sep=""), gaugeSectors(
-  success = c(-4, -1), warning = c(-10, -5), danger = c(0, base)
-))
+mean.res <- round(mean(result$Anzahl))
+valueBox(mean.res, icon="fa-bar-chart",color=COL.MALICIOUS)
 ```
 
 Gesamtauswertungen {.storyboard}
