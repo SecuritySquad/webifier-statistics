@@ -180,6 +180,8 @@ locale <- Sys.setlocale("LC_TIME", "en_US.UTF-8")
 format <- "%a %b %d %H:%M:%S CEST %Y"
 result[,1] <- format(as.Date(as.POSIXct(result[,1],format, tz="CET")),"%d-%m-%Y")
 result <- result[!is.na(result$Datum),]
+today <- format(as.Date(Sys.Date()),"%d-%m-%Y")
+result <- result[result$Datum!=today,]
 result <- result[order(result$Datum),]
 result <- aggregate(Anzahl ~ Datum, result, length)
 mean.res <- round(mean(result$Anzahl))
