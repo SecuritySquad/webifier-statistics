@@ -306,7 +306,6 @@ valueBox(paste(minute(tp),'min ',second(tp),'s',sep=""), icon="fa-hourglass-half
 
 ### Gefundene Viren
 ```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'VirusScan'}", '{resultInfo:1, result:1}',skip=0,limit=Inf)
 #TODO
 ```
 
