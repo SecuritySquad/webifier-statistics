@@ -263,6 +263,7 @@ result[result$overallResultType=='SUSPICIOUS',2] <- "verdächtig"
 names(result) <- c('TLD','Ergebnis','id')
 result.size <- aggregate(id ~ TLD,result, length)
 result <- result[result$TLD==result.size[result.size$id>50,]$TLD,]
+result <- result[!is.na(result$Ergebnis),]
 p <- ggplot(data = result, aes(x = TLD, fill = Ergebnis),col="Anzahl") +
             geom_bar(position = "dodge") +
             ylab("Anzahl") + 
@@ -298,7 +299,7 @@ fin.result[is.na(fin.result$verdächtig),3] <- 0
 fin.result[is.na(fin.result$unbedenklich),4] <- 0
 fin.result$order <- fin.result$bedrohlich+0.01*fin.result$verdächtig
 fin.result$unbedenklich <- 100-fin.result$bedrohlich-fin.result$verdächtig
-fin.result <- fin.result[fin.result$sauber!=100,]
+fin.result <- fin.result[fin.result$unbedenklich!=100,]
 fin.result$TLD <- factor(fin.result$TLD, levels = unique(fin.result$TLD)[order(fin.result$order, decreasing = TRUE)])
 p <- plot_ly(fin.result, x = ~TLD, y = ~bedrohlich, type = 'bar', name = 'bedrohlich', marker = list(color=COL.MALICIOUS)) %>%
   add_trace(y = ~verdächtig, name = 'verdächtig', marker = list(color=COL.SUSPICIOUS)) %>%
@@ -336,7 +337,6 @@ ggplotly(p)
 
 ```{r}
 result <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{}", "{host:1,overallResultValue:1,overallResultType:1}",skip=0,limit=Inf)
-result <- result[result$overallResultType!='CLEAN',]
 result <- result[result$overallResultType!='UNDEFINED',]
 result[,1] <- tld_extract(result[,1],NULL)[,2]
 result[,3] <- countrycode(result$host,"iso2c","country.name.de")
@@ -344,7 +344,8 @@ result[,4] <- countrycode(result$host,"iso2c","iso3c")
 result <- result[!is.na(result[,4]),]
 names(result) <- c('iso2c','val','country','iso3c')
 result$val <- as.numeric(result$val)
-result <- aggregate(val ~ country + iso3c,result,sum)
+result <- aggregate(val ~ country + iso3c,result,mean)
+result$val <- round(result$val*100)
 
 # light grey boundaries
 l <- list(color = toRGB("grey"), width = 0.5)
