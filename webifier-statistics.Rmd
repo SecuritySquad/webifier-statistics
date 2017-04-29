@@ -404,7 +404,7 @@ valueBox(paste(minute(tp),'min ',second(tp),'s',sep=""), icon="fa-hourglass-half
 
 ### Gefundene Viren
 ```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'VirusScan',result:'CLEAN'}", "{resultInfo:1}",skip=0,limit=Inf)
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{name:'VirusScan',result:'MALICIOUS'}", "{resultInfo:1}",skip=0,limit=Inf)
 mal.files <- 0
 for(i in nrow(result)){
   mal.files <- mal.files + fromJSON(result[i,1])$malicious_files
