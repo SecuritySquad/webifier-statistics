@@ -15,6 +15,7 @@ params:
 ---
 
 ```{r setup, include=FALSE}
+memory.limit(size=2500)
 #Colors:      
 COL.MALICIOUS<-"#d3061a"
 COL.SUSPICIOUS<-"#ff8833"
