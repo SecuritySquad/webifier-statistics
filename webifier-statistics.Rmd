@@ -15,7 +15,6 @@ params:
 ---
 
 ```{r setup, include=FALSE}
-memory.limit(size=2500)
 #Colors:      
 COL.MALICIOUS<-"#d3061a"
 COL.SUSPICIOUS<-"#ff8833"
@@ -433,10 +432,6 @@ p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',marker = l
 ggplotly(p)
 ```
 
-### Some Analysis
-```{r}
-```
-
 PortScan {data-navmenu="Einzelauswertungen"}
 =====================================
 
@@ -608,9 +603,6 @@ p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',marker = l
 ggplotly(p)
 ```
 
-###Some Auswertung stuff
-```{r}
-```
 
 HeaderInspection {data-navmenu="Einzelauswertungen"}
 =====================================
@@ -661,10 +653,6 @@ p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',marker = l
 ggplotly(p)
 ```
 
-###Some Auswertung stuff
-```{r}
-```
-
 LinkChecker {data-navmenu="Einzelauswertungen"}
 =====================================
 
@@ -712,10 +700,6 @@ p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',marker = l
          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 ggplotly(p)
-```
-
-###Some Auswertung stuff
-```{r}
 ```
 
 
@@ -768,10 +752,6 @@ p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',marker = l
 ggplotly(p)
 ```
 
-###Some Auswertung stuff
-```{r}
-```
-
 
 CertificateChecker {data-navmenu="Einzelauswertungen"}
 =====================================
@@ -822,9 +802,6 @@ p <- plot_ly(result, labels = ~result, values = ~Anzahl, type = 'pie',marker = l
 ggplotly(p)
 ```
 
-###Some Auswertung stuff
-```{r}
-```
 
 
 Die bedrohlichsten Webseiten
