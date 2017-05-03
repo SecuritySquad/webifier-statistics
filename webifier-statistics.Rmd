@@ -338,8 +338,8 @@ ggplotly(p)
 ```{r}
 result <- dbGetQueryForKeys(mg1, 'webifierTestResultData',"{}", "{host:1,overallResultValue:1,overallResultType:1}",skip=0,limit=Inf)
 result <- result[result$overallResultType!='UNDEFINED',]
-result[result$overallResultType=='SUSPICIOUS',2] <- result[result$overallResultType=='SUSPICIOUS',2]*2
-result[result$overallResultType=='MALICIOUS',2] <- result[result$overallResultType=='MALICIOUS',2]*5
+result[result$overallResultType=='SUSPICIOUS',2] <- result[result$overallResultType=='SUSPICIOUS',2] * 2
+result[result$overallResultType=='MALICIOUS',2] <- result[result$overallResultType=='MALICIOUS',2] * 5
 result[,1] <- tld_extract(result[,1],NULL)[,2]
 result[,3] <- countrycode(result$host,"iso2c","country.name.de")
 result[,4] <- countrycode(result$host,"iso2c","iso3c")
