@@ -372,6 +372,55 @@ ggplotly(p)
 
 ```
 
+### Visualisierung, welche Tests häufig gemeinsam bedrohliches Ergebnis liefern
+```{r}
+pasteNames <- function(tests){
+  string <- "Testnamen:"
+  list <- strsplit(tests,";")[[1]]
+  for(i in 1:length(list)){
+    string <- paste(string,"</br>",list[[i]],sep="")
+  }
+  return(string)
+}
+
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{}", '{overallResult:1,result:1,name:1}',skip=0,limit=Inf)
+result <- result[result$result!="SUSPICIOUS",]
+result <- result[result$result!="UNDEFINED",]
+result <- result[result$result!="CLEAN",]
+for(i in 1:nrow(result)){
+  result[i,1] <- fromJSON(result[i,1])[2]  
+}
+result <- aggregate(name~overallResult,result,FUN=function(x){
+  string <- ""
+  for(i in 1:length(x)){
+    string <- paste(x[i],string,sep=";")
+  }
+  return(substr(string,1,nchar(string)-1))
+})
+result[,3] <- 0
+names(result) <- c("id","tests","count")
+result <- aggregate(count ~tests,result,length)
+result[,3] <- nrow(result):1
+for(i in 1:nrow(result)){
+  result[i,4] <- lengths(strsplit(result[i,1],";"))
+  result[i,1] <- pasteNames(result[i,1])
+}
+names(result) <- c("tests","y","x","size")
+result$size <- result$size*10
+
+p <- plot_ly(result, x = ~x, y = ~y, text = ~tests,hoverinfo = 'text', type = 'scatter', mode = 'markers',
+        marker = list(size = ~size, opacity = 0.8)) %>%
+  layout(title = 'Testzusammenhänge',
+         xaxis = list(showgrid = FALSE,showticklabels=FALSE,title=""),
+         yaxis = list(showgrid = TRUE,title="Anzahl"))
+ggplotly(p)
+```
+
+***
+
+Hier werden die Zusammenhänge der einzelnen Tests visualisiert. Die Größe der Kreise ist die Anzahl der involvierten Tests. Auf der Y-Achse wird die Anzahl aufgetragen wie oft diese Tests gemeinsam ein bedrohliches Ergebnis lieferten.
+
+
 VirusScan {data-navmenu="Einzelauswertungen"}
 =====================================
 
