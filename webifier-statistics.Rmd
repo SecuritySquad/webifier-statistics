@@ -408,7 +408,7 @@ result <- result[result[,4]!=1,]
 names(result) <- c("tests","y","x","size")
 result$size <- result$size*10
 
-p <- plot_ly(result, x = ~x, y = ~y, text = ~tests,hoverinfo = 'text', type = 'scatter', mode = 'markers',color = ~y,colors="Blues",
+p <- plot_ly(result, x = ~x, y = ~y, text = ~tests,hoverinfo = 'text', type = 'scatter', mode = 'markers',color = ~y,colors=c("darkgrey","blue"),
         marker = list(size = ~size, opacity = 0.8)) %>%
   layout(title = 'Testzusammenhänge',
          xaxis = list(showgrid = FALSE,showticklabels=FALSE,title=""),
