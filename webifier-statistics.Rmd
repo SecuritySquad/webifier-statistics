@@ -237,7 +237,7 @@ Gesamtauswertungen {.storyboard}
 ### Testergebnisverteilung
 
 ```{r}
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{}", '{_id:0,name:1,result:1}',skip=0,limit=Inf)
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{}", '{name:1,result:1}',skip=0,limit=Inf)
 result <- result[,-1]
 result[result$result=='MALICIOUS',2] <- "bedrohlich"
 result[result$result=='SUSPICIOUS',2] <- "verdächtig"
