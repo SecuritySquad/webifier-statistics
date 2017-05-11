@@ -384,10 +384,7 @@ pasteNames <- function(tests){
   return(string)
 }
 
-result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{}", '{overallResult:1,result:1,name:1}',skip=0,limit=Inf)
-result <- result[result$result!="SUSPICIOUS",]
-result <- result[result$result!="UNDEFINED",]
-result <- result[result$result!="CLEAN",]
+result <- dbGetQueryForKeys(mg1, 'webifierSingleTestResultData',"{result:'MALICIOUS'}", '{overallResult:1,result:1,name:1}',skip=0,limit=Inf)
 for(i in 1:nrow(result)){
   result[i,1] <- fromJSON(result[i,1])[2]  
 }
