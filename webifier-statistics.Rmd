@@ -405,10 +405,10 @@ for(i in 1:nrow(result)){
   result[i,1] <- pasteNames(result[i,1],result[i,2])
 }
 result <- result[result[,4]!=1,]
-names(result) <- c("tests","y","x","size")
+names(result) <- c("tests","Anzahl","x","size")
 result$size <- result$size*10
 
-p <- plot_ly(result, x = ~x, y = ~y, text = ~tests,hoverinfo = 'text', type = 'scatter', mode = 'markers',color = ~y,colors=c("darkgrey","blue"),
+p <- plot_ly(result, x = ~x, y = ~Anzahl, text = ~tests,hoverinfo = 'text', type = 'scatter', mode = 'markers',color = ~Anzahl,colors=c("darkgrey","blue"),
         marker = list(size = ~size, opacity = 0.8)) %>%
   layout(title = 'Testzusammenhänge',
          xaxis = list(showgrid = FALSE,showticklabels=FALSE,title=""),
