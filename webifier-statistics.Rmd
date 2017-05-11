@@ -49,6 +49,7 @@ library('DT')
 library('dygraphs')
 library('xts')
 mg1 <- mongoDbConnect(params$dbname)
+options( java.parameters = "-Xmx2g" )
 print(dbShowCollections(mg1))
 ```
 
