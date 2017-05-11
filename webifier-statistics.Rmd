@@ -16,6 +16,7 @@ params:
 
 ```{r setup, include=FALSE}
 #Colors:      
+options( java.parameters = "-Xmx4g" )
 COL.MALICIOUS<-"#d3061a"
 COL.SUSPICIOUS<-"#ff8833"
 COL.CLEAN<-"#007d25"
@@ -49,7 +50,6 @@ library('DT')
 library('dygraphs')
 library('xts')
 mg1 <- mongoDbConnect(params$dbname)
-options( java.parameters = "-Xmx4g" )
 print(dbShowCollections(mg1))
 ```
 
